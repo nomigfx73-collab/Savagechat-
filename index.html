@@ -3,113 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SavageChat | Professional Dashboard</title>
+    <title>SavageChat | Permanent Accounts</title>
     <style>
         body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 70px; }
         .hidden { display: none !important; }
-        
-        /* Nav & Headers */
         .nav { background: #1c1f26; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .tab-header { display: flex; background: #1c1f26; border-bottom: 1px solid #333; }
-        .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; color: #888; font-weight: bold; }
-        .tab.active { color: #00d4ff; border-bottom: 3px solid #00d4ff; }
-
-        /* Inbox Style */
-        .chat-list { padding: 10px; }
-        .chat-item { display: flex; align-items: center; padding: 15px; background: #1c1f26; border-radius: 15px; margin-bottom: 10px; cursor: pointer; border: 1px solid #333; }
-        .avatar { width: 50px; height: 50px; border-radius: 50%; background-size: cover; position: relative; border: 2px solid #00d4ff; }
-        .online-dot { position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; background: #00ff44; border-radius: 50%; border: 2px solid #1c1f26; }
+        .stat-card { background: linear-gradient(135deg, #1c1f26, #111); padding: 20px; border-radius: 15px; margin: 15px; border: 1px solid #333; text-align: center; }
+        .btn-action { background: #00d4ff; color: black; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .chat-item { display: flex; align-items: center; padding: 15px; background: #1c1f26; border-bottom: 1px solid #333; cursor: pointer; }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; background-size: cover; border: 2px solid #00d4ff; }
         .chat-info { flex: 1; margin-left: 15px; }
-        .chat-name { font-weight: bold; font-size: 16px; margin-bottom: 4px; }
-        .chat-preview { font-size: 12px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
-        .chat-time { font-size: 10px; color: #555; text-align: right; }
-
-        /* General UI */
-        .auth-box { text-align: center; padding: 50px 20px; min-height: 100vh; }
-        input, select { width: 90%; max-width: 300px; padding: 12px; margin: 10px auto; border-radius: 10px; background: #1c1f26; color: white; border: 1px solid #333; }
-        .btn-main { background: #00d4ff; color: black; border: none; padding: 15px 40px; border-radius: 25px; font-weight: bold; cursor: pointer; }
+        #chat-window { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0e14; z-index: 2000; display: flex; flex-direction: column; }
+        #chat-msgs { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .msg { max-width: 80%; padding: 10px; border-radius: 10px; font-size: 14px; }
+        .bot { background: #252932; align-self: flex-start; }
+        .user { background: #00d4ff; color: black; align-self: flex-end; }
+        .chat-input { background: #1c1f26; padding: 10px; display: flex; gap: 10px; }
+        input { flex: 1; background: #0b0e14; border: 1px solid #333; padding: 10px; color: white; border-radius: 20px; }
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1c1f26; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
-        .card { background: #1c1f26; border-radius: 15px; margin: 15px; overflow: hidden; }
-        img { width: 100%; height: 250px; object-fit: cover; }
     </style>
 </head>
-<body>
+<body onload="checkLogin()">
 
-    <div id="auth-screen" class="auth-box">
-        <h1 style="color:#00d4ff;">SAVAGE CHAT</h1>
-        <input type="text" id="name" placeholder="Full Name">
-        <input type="number" id="age" placeholder="Age (18+)">
-        <select id="role">
-            <option value="gifter">Male (Gifter)</option>
-            <option value="earner">Female (Earner)</option>
-        </select>
-        <button class="btn-main" onclick="startApp()">Start Chatting</button>
+    <div id="auth-screen" style="text-align:center; padding-top:100px;">
+        <h2 style="color:#00d4ff;">SAVAGE CHAT</h2>
+        <input type="text" id="uname" placeholder="Full Name"><br>
+        <select id="urole" style="margin-top:10px; padding:10px; border-radius:10px; background:#1c1f26; color:white;">
+            <option value="gifter">I am a Male (Gifter)</option>
+            <option value="earner">I am a Female (Earner)</option>
+        </select><br>
+        <button class="btn-action" onclick="login()">Create & Save Account</button>
     </div>
 
     <div id="app-screen" class="hidden">
         <div class="nav">
-            <span id="user-display" style="font-weight:bold;">SAVAGE</span>
-            <div style="background:#ffaa00; color:black; padding:5px 12px; border-radius:20px; font-weight:bold; font-size:12px;">🪙 0</div>
+            <span id="name-tag" style="font-weight:bold;"></span>
+            <button onclick="logout()" style="background:none; border:none; color:#ff0055; font-size:12px;">Logout</button>
         </div>
 
-        <div class="tab-header">
-            <div id="tab-home" class="tab active" onclick="showSection('home')">Home</div>
-            <div id="tab-inbox" class="tab" onclick="showSection('inbox')">Inbox</div>
-        </div>
-
-        <div id="home-section">
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500">
-                <div style="padding:15px;">
-                    <h3>Zoya AI</h3>
-                    <button style="width:100%; background:#ff0055; border:none; padding:12px; color:white; font-weight:bold; border-radius:10px;">VIDEO CALL</button>
-                </div>
+        <div id="home-view">
+            <div id="gifter-stats" class="stat-card hidden">
+                <p>Coins</p><h2>🪙 0</h2>
+                <button class="btn-action" onclick="alert('Contact Noman: 03255335618')">BUY COINS</button>
+            </div>
+            <div id="earner-stats" class="stat-card hidden">
+                <p>Earnings</p><h2>Rs. 0.00</h2>
+                <button class="btn-action" style="background:#00ff44;" onclick="alert('Request sent!')">WITHDRAW</button>
+            </div>
+            <div class="stat-card" style="text-align:left;">
+                <h3>Zoya AI</h3>
+                <p style="color:#00ff44; font-size:11px;">Free Chat Forever</p>
+                <button class="btn-action" onclick="showPage('inbox')">MESSAGE NOW</button>
             </div>
         </div>
 
-        <div id="inbox-section" class="hidden">
-            <div class="chat-list">
-                <div class="chat-item" onclick="alert('System: Please recharge to reply')">
-                    <div class="avatar" style="background-image: url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100');"><div class="online-dot"></div></div>
-                    <div class="chat-info">
-                        <div class="chat-name">Zoya AI (Online)</div>
-                        <div class="chat-preview">Hey baby! Aapne message nahi kiya? Main intezaar kar rahi hoon... 💋</div>
-                    </div>
-                    <div class="chat-time">2m ago</div>
-                </div>
-
-                <div class="chat-item" onclick="alert('System: Please recharge to reply')">
-                    <div class="avatar" style="background-image: url('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=100');"><div class="online-dot"></div></div>
-                    <div class="chat-info">
-                        <div class="chat-name">Sara Malik</div>
-                        <div class="chat-preview">Are you free for a private video call? I have a surprise... 😉</div>
-                    </div>
-                    <div class="chat-time">1h ago</div>
-                </div>
+        <div id="inbox-view" class="hidden">
+            <div class="chat-item" onclick="openChat()">
+                <div class="avatar" style="background-image:url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100');"></div>
+                <div class="chat-info"><b>Zoya AI</b><br><small>Click to view saved chat history...</small></div>
             </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div onclick="showPage('home')">🏠 Home</div>
+            <div onclick="showPage('inbox')">💬 Inbox</div>
+        </div>
+    </div>
+
+    <div id="chat-window" class="hidden">
+        <div class="nav">
+            <span onclick="closeChat()">← Back</span>
+            <span style="font-weight:bold;">Zoya AI</span>
+            <span onclick="clearChat()" style="color:#ff0055; font-size:10px;">Clear Chat</span>
+        </div>
+        <div id="chat-msgs"></div>
+        <div class="chat-input">
+            <input type="text" id="m-input" placeholder="Type message...">
+            <button onclick="sendMsg()" style="background:#00d4ff; border:none; width:40px; height:40px; border-radius:50%;">➤</button>
         </div>
     </div>
 
     <script>
-        function startApp() {
-            let name = document.getElementById('name').value;
-            let age = document.getElementById('age').value;
-            if(name === "" || age < 18) { alert("Invalid details!"); return; }
-            
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('app-screen').classList.remove('hidden');
-            document.getElementById('user-display').innerText = name.toUpperCase();
+        let userData = {};
+        let chatHistory = [];
+
+        function checkLogin() {
+            const savedUser = localStorage.getItem('savageUser');
+            if (savedUser) {
+                userData = JSON.parse(savedUser);
+                loadApp();
+            }
         }
 
-        function showSection(section) {
-            document.getElementById('home-section').classList.add('hidden');
-            document.getElementById('inbox-section').classList.add('hidden');
-            document.getElementById('tab-home').classList.remove('active');
-            document.getElementById('tab-inbox').classList.remove('active');
+        function login() {
+            let name = document.getElementById('uname').value;
+            let role = document.getElementById('urole').value;
+            if(!name) return;
 
-            document.getElementById(section + '-section').classList.remove('hidden');
-            document.getElementById('tab-' + section).classList.add('active');
+            userData = { name: name, role: role };
+            localStorage.setItem('savageUser', JSON.stringify(userData));
+            loadApp();
+        }
+
+        function loadApp() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app-screen').classList.remove('hidden');
+            document.getElementById('name-tag').innerText = userData.name.toUpperCase();
+            
+            if(userData.role === 'earner') {
+                document.getElementById('earner-stats').classList.remove('hidden');
+            } else {
+                document.getElementById('gifter-stats').classList.remove('hidden');
+            }
+            loadChat();
+        }
+
+        function logout() {
+            localStorage.clear();
+            location.reload();
+        }
+
+        function showPage(p) {
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('inbox-view').classList.add('hidden');
+            document.getElementById(p + '-view').classList.remove('hidden');
+        }
+
+        function openChat() { 
+            document.getElementById('chat-window').classList.remove('hidden'); 
+            const box = document.getElementById('chat-msgs');
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function closeChat() { document.getElementById('chat-window').classList.add('hidden'); }
+
+        function loadChat() {
+            const savedChat = localStorage.getItem('savageChat_' + userData.name);
+            if (savedChat) {
+                chatHistory = JSON.parse(savedChat);
+                renderChat();
+            } else {
+                chatHistory = [{ type: 'bot', text: 'Hey! Main Zoya hoon. Hamari chat ab hamesha yahan mehfooz rahegi. 😉' }];
+                renderChat();
+            }
+        }
+
+        function renderChat() {
+            const box = document.getElementById('chat-msgs');
+            box.innerHTML = '';
+            chatHistory.forEach(msg => {
+                let div = document.createElement('div');
+                div.className = "msg " + msg.type;
+                div.innerText = msg.text;
+                box.appendChild(div);
+            });
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function sendMsg() {
+            let input = document.getElementById('m-input');
+            if(!input.value) return;
+
+            chatHistory.push({ type: 'user', text: input.value });
+            saveAndRender();
+
+            let userQuery = input.value.toLowerCase();
+            input.value = "";
+
+            setTimeout(() => {
+                let reply = "Bohat khoob! Main aapki baat yaad rakhungi.";
+                if(userQuery.includes("halo") || userQuery.includes("hi")) reply = "Hi! Kaise ho mere savage dost?";
+                
+                chatHistory.push({ type: 'bot', text: reply });
+                saveAndRender();
+            }, 1000);
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('savageChat_' + userData.name, JSON.stringify(chatHistory));
+            renderChat();
+        }
+
+        function clearChat() {
+            if(confirm("Delete all messages?")) {
+                chatHistory = [];
+                saveAndRender();
+            }
         }
     </script>
 </body>
-</html>
+    </html>
+    
