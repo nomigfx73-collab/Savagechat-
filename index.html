@@ -3,61 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SavageChat | Secure Identity</title>
+    <title>SavageChat | Instant Access</title>
     <style>
         body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 70px; }
         .hidden { display: none !important; }
         .nav { background: #1c1f26; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
         input, select, textarea { width: 90%; max-width: 300px; padding: 12px; margin: 10px auto; border-radius: 10px; background: #1c1f26; color: white; border: 1px solid #444; display: block; }
         .btn-action { background: #00d4ff; color: black; border: none; padding: 12px 25px; border-radius: 20px; font-weight: bold; cursor: pointer; width: 90%; max-width: 300px; }
-        .post-card { background: #1c1f26; border-radius: 15px; margin: 15px; border: 1px solid #333; overflow: hidden; }
-        .post-img { width: 100%; height: auto; display: block; }
+        
+        /* Girl Profile Cards */
+        .girl-card { background: #1c1f26; border-radius: 15px; margin: 15px; border: 1px solid #333; overflow: hidden; position: relative; }
+        .girl-img { width: 100%; height: 250px; object-fit: cover; }
+        .girl-info { padding: 15px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); position: absolute; bottom: 0; width: 100%; box-sizing: border-box; }
+        .online-tag { background: #00ff44; color: black; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; }
+        
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1c1f26; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
-        .profile-dp { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #00d4ff; margin: 10px auto; background-size: cover; background-position: center; }
     </style>
 </head>
 <body onload="checkAutoLogin()">
 
-    <div id="auth-screen" style="text-align:center; padding-top:50px;">
-        <h2 style="color:#00d4ff;">SAVAGE AUTH</h2>
-        <p style="font-size:12px; color:#888;">Enter your official email to continue</p>
-        <input type="email" id="uemail" placeholder="Email Address (@gmail.com)">
-        <input type="password" id="upass" placeholder="Create Password">
-        <input type="text" id="uname" placeholder="Display Name">
+    <div id="auth-screen" style="text-align:center; padding-top:60px;">
+        <h2 style="color:#00d4ff;">SAVAGE CHAT</h2>
+        <p style="font-size:12px; color:#888;">Login with Email to see who's online</p>
+        <input type="email" id="uemail" placeholder="Email Address">
+        <input type="password" id="upass" placeholder="Password">
+        <input type="text" id="uname" placeholder="Your Name">
         <select id="urole">
             <option value="gifter">I am a Boy (Gifter)</option>
             <option value="earner">I am a Girl (Earner)</option>
         </select>
-        <button class="btn-action" onclick="sendVerification()">Verify & Create Account</button>
-    </div>
-
-    <div id="verify-screen" class="hidden" style="text-align:center; padding-top:100px;">
-        <h3 style="color:#00ff44;">Verification Sent!</h3>
-        <p>Humne aapki email par 6-digit code bheja hai.</p>
-        <input type="number" id="vcode" placeholder="Enter Code (e.g. 123456)">
-        <button class="btn-action" onclick="verifyNow()">Complete Verification</button>
+        <button class="btn-action" onclick="loginNow()">Login & Start</button>
     </div>
 
     <div id="app-screen" class="hidden">
         <div class="nav">
             <span id="name-tag" style="font-weight:bold; color:#00d4ff;"></span>
-            <button onclick="logout()" style="color:#ff0055; background:none; border:none; font-size:12px;">Logout</button>
+            <div style="background:#ffaa00; color:black; padding:4px 10px; border-radius:15px; font-size:12px; font-weight:bold;">🪙 0</div>
         </div>
 
         <div id="home-view">
-            <div id="create-post" class="post-card hidden" style="padding:15px; text-align:center;">
-                <textarea id="p-text" placeholder="What's on your mind?"></textarea>
-                <input type="file" id="p-file" accept="image/*" style="font-size:10px;">
-                <button class="btn-action" onclick="saveMediaPost()">Post to Feed</button>
+            <h4 style="margin-left:15px; color:#aaa;">Lerkia Online Hain 🔥</h4>
+            
+            <div class="girl-card" onclick="alert('Starting Free Chat...')">
+                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" class="girl-img">
+                <div class="girl-info">
+                    <span class="online-tag">● ONLINE</span>
+                    <h3 style="margin:5px 0;">Zoya AI</h3>
+                    <p style="font-size:12px; color:#eee;">Let's chat! Main bore ho rahi hoon... ❤️</p>
+                </div>
             </div>
-            <div id="feed-container"></div>
+
+            <div class="girl-card" onclick="alert('Starting Free Chat...')">
+                <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=500" class="girl-img">
+                <div class="girl-info">
+                    <span class="online-tag">● ONLINE</span>
+                    <h3 style="margin:5px 0;">Sara Malik</h3>
+                    <p style="font-size:12px; color:#eee;">Privacy is my priority. Private chat? 😉</p>
+                </div>
+            </div>
         </div>
 
-        <div id="profile-view" class="hidden" style="text-align:center; padding:20px;">
-            <div id="user-dp" class="profile-dp"></div>
-            <input type="file" id="dp-input" accept="image/*" onchange="updateDP()">
-            <textarea id="u-bio" placeholder="Update Bio"></textarea>
-            <button class="btn-action" onclick="saveBio()">Save Profile</button>
+        <div id="profile-view" class="hidden" style="text-align:center; padding-top:50px;">
+            <h3>My Profile</h3>
+            <p id="display-email" style="color:#888;"></p>
+            <button class="btn-action" style="background:#ff0055; color:white;" onclick="logout()">Logout Account</button>
         </div>
 
         <div class="bottom-nav">
@@ -70,78 +79,30 @@
         let currentUser = null;
 
         function checkAutoLogin() {
-            const saved = localStorage.getItem('savageActiveSession');
+            const saved = localStorage.getItem('savageSession');
             if (saved) {
                 currentUser = JSON.parse(saved);
                 loadDashboard();
             }
         }
 
-        function sendVerification() {
+        function loginNow() {
             const email = document.getElementById('uemail').value;
-            if(!email.includes('@')) return alert("Invalid Email!");
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('verify-screen').classList.remove('hidden');
-        }
-
-        function verifyNow() {
             const name = document.getElementById('uname').value;
-            const email = document.getElementById('uemail').value;
             const role = document.getElementById('urole').value;
 
-            currentUser = { 
-                name: name, email: email, role: role, 
-                bio: "Savage Life", dp: "https://via.placeholder.com/80" 
-            };
-            localStorage.setItem('savageActiveSession', JSON.stringify(currentUser));
+            if(!email || !name) return alert("Please fill all details!");
+
+            currentUser = { name: name, email: email, role: role };
+            localStorage.setItem('savageSession', JSON.stringify(currentUser));
             loadDashboard();
         }
 
         function loadDashboard() {
-            document.getElementById('verify-screen').classList.add('hidden');
+            document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-screen').classList.remove('hidden');
             document.getElementById('name-tag').innerText = currentUser.name.toUpperCase();
-            document.getElementById('user-dp').style.backgroundImage = `url('${currentUser.dp}')`;
-            
-            if(currentUser.role === 'earner') document.getElementById('create-post').classList.remove('hidden');
-            renderFeed();
-        }
-
-        function saveMediaPost() {
-            const text = document.getElementById('p-text').value;
-            const file = document.getElementById('p-file').files[0];
-            const reader = new FileReader();
-
-            reader.onloadend = function() {
-                const posts = JSON.parse(localStorage.getItem('savage_media_vault') || '[]');
-                posts.unshift({ name: currentUser.name, text: text, img: file ? reader.result : null });
-                localStorage.setItem('savage_media_vault', JSON.stringify(posts));
-                renderFeed();
-            };
-            if(file) reader.readAsDataURL(file); else reader.onloadend();
-        }
-
-        function renderFeed() {
-            const container = document.getElementById('feed-container');
-            const posts = JSON.parse(localStorage.getItem('savage_media_vault') || '[]');
-            container.innerHTML = posts.map(p => `
-                <div class="post-card">
-                    <div style="padding:10px;"><b>${p.name}</b></div>
-                    ${p.img ? `<img src="${p.img}" class="post-img">` : ''}
-                    <p style="padding:10px;">${p.text}</p>
-                </div>
-            `).join('');
-        }
-
-        function updateDP() {
-            const file = document.getElementById('dp-input').files[0];
-            const reader = new FileReader();
-            reader.onloadend = function() {
-                currentUser.dp = reader.result;
-                localStorage.setItem('savageActiveSession', JSON.stringify(currentUser));
-                document.getElementById('user-dp').style.backgroundImage = `url('${reader.result}')`;
-            };
-            reader.readAsDataURL(file);
+            document.getElementById('display-email').innerText = currentUser.email;
         }
 
         function showPage(p) {
@@ -150,8 +111,10 @@
             document.getElementById(p + '-view').classList.remove('hidden');
         }
 
-        function logout() { localStorage.removeItem('savageActiveSession'); location.reload(); }
+        function logout() {
+            localStorage.removeItem('savageSession');
+            location.reload();
+        }
     </script>
 </body>
-    </html>
-    
+</html>
