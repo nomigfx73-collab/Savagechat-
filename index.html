@@ -18,9 +18,9 @@
         button:hover { background: #ff3377; }
         #camera-area { width: 100%; background: black; display: none; }
         
-        /* Payment Modal Styling */
-        #payment-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1c1f26; padding: 20px; border-radius: 15px; border: 2px solid #ffaa00; width: 80%; max-width: 300px; z-index: 100; }
-        .close-btn { color: #ff0055; float: right; cursor: pointer; font-weight: bold; }
+        /* Payment Page Styling */
+        #payment-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1c1f26; padding: 20px; border-radius: 15px; border: 2px solid #ffaa00; width: 85%; max-width: 320px; z-index: 100; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
+        .close-btn { color: #ff0055; float: right; cursor: pointer; font-weight: bold; font-size: 20px; }
     </style>
 </head>
 <body>
@@ -47,16 +47,16 @@
     </div>
 
     <div id="payment-modal">
-        <span class="close-btn" onclick="hidePayment()">X</span>
-        <h3>💰 Recharge Wallet</h3>
-        <p style="font-size: 14px;">Send payment to get coins:</p>
-        <div style="background: #333; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
-            <p style="margin: 5px 0;"><b>JazzCash / EasyPaisa</b></p>
-            <p style="color: #ffaa00; font-size: 18px; margin: 5px 0;">03xx-xxxxxxx</p>
-            <p style="font-size: 12px;">(Apna number yahan likhein)</p>
+        <span class="close-btn" onclick="hidePayment()">×</span>
+        <h3 style="color: #ffaa00;">💎 Recharge Coins</h3>
+        <p style="font-size: 14px;">Send payment to get instant coins:</p>
+        <div style="background: #333; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 5px solid #ffaa00;">
+            <p style="margin: 0; font-size: 14px;"><b>JazzCash / EasyPaisa</b></p>
+            <p style="color: #ffaa00; font-size: 20px; margin: 10px 0; letter-spacing: 1px;"><b>03255335618</b></p>
+            <p style="font-size: 11px; color: #ccc;">(Account Title: Noman)</p>
         </div>
-        <p style="font-size: 12px; color: #aaa;">Send Screenshot on WhatsApp after payment.</p>
-        <button style="background: #25d366; font-size: 14px; padding: 10px;" onclick="window.open('https://wa.me/yournumber')">Contact on WhatsApp</button>
+        <p style="font-size: 12px; color: #aaa; margin-bottom: 15px;">Send screenshot on WhatsApp after payment for activation.</p>
+        <button style="background: #25d366; font-size: 16px; padding: 12px; border-radius: 8px;" onclick="window.open('https://wa.me/923255335618?text=Bhai%20Recharge%20karna%20hai')">WhatsApp Support</button>
     </div>
 
     <script>
@@ -67,9 +67,9 @@
                 video.srcObject = stream;
                 video.style.display = 'block';
                 document.querySelector('img').style.display = 'none';
-                alert("Connecting to Savage Secure Server...");
+                alert("Savage Server: Connecting to call...");
             } catch (err) {
-                alert("Please allow Camera access to start the call!");
+                alert("Camera access denied! Please allow permissions.");
             }
         }
 
@@ -82,5 +82,4 @@
         }
     </script>
 </body>
-  </html>
-  
+</html>
