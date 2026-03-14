@@ -3,234 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Savage App | Pro Edition</title>
+    <title>Savage App Pro</title>
     <style>
-        :root { --accent: #00d4ff; --dark: #0b1014; --card: #1c2229; --btn-bg: #212830; }
-        body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 75px; overflow-x: hidden; }
+        :root { --accent: #00d4ff; --dark: #0b1014; --card: #1c2229; --green: #25d366; }
+        body { background: var(--dark); color: white; font-family: sans-serif; margin: 0; padding-bottom: 70px; overflow-x: hidden; }
         .hidden { display: none !important; }
         
-        /* 12, 13: Remember Account & Save Info Logic */
+        /* Header & Coins */
         .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--accent); position: sticky; top: 0; z-index: 1000; }
-        .coins-badge { background: rgba(255,170,0,0.1); color: #ffaa00; padding: 5px 12px; border-radius: 20px; border: 1px solid #ffaa00; font-weight: bold; }
+        .coin-box { background: rgba(255,170,0,0.1); color: #ffaa00; padding: 5px 12px; border-radius: 20px; border: 1px solid #ffaa00; font-weight: bold; font-size: 14px; }
 
-        /* 3: Live Stream Box (Home Page) */
-        .live-container { display: flex; overflow-x: auto; padding: 10px; gap: 12px; background: #0e141a; }
-        .live-circle { min-width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ff0055; padding: 2px; position: relative; cursor: pointer; }
-        .live-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .live-tag { position: absolute; bottom: -5px; left: 15%; background: #ff0055; color: white; font-size: 8px; padding: 2px 6px; border-radius: 10px; font-weight: bold; }
+        /* Home: Live Streams & FB Posts */
+        .live-tray { display: flex; overflow-x: auto; padding: 10px; gap: 10px; background: #0e141a; border-bottom: 1px solid #222; }
+        .live-user { min-width: 60px; height: 60px; border-radius: 50%; border: 2px solid #ff0055; padding: 2px; position: relative; }
+        .live-user img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .live-label { position: absolute; bottom: -5px; left: 20%; background: #ff0055; font-size: 8px; padding: 2px 5px; border-radius: 4px; font-weight: bold; }
 
-        /* 2, 10: Post Box & FB Style Like/Comments */
-        .post { background: var(--card); border-radius: 15px; margin: 15px; border: 1px solid #333; overflow: hidden; }
-        .post-header { padding: 10px; display: flex; align-items: center; gap: 10px; }
-        .post-img { width: 100%; height: auto; display: block; background: #12181f; }
-        .post-actions { padding: 12px; display: flex; gap: 20px; border-top: 1px solid #2a323d; }
-        .action-btn { background: none; border: none; color: #888; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 14px; }
-        .action-btn.active { color: var(--accent); }
+        .post { background: var(--card); margin: 10px; border-radius: 12px; border: 1px solid #333; overflow: hidden; }
+        .post-img { width: 100%; height: auto; display: block; }
+        .post-btns { padding: 12px; display: flex; gap: 15px; border-top: 1px solid #2a323d; }
+        .btn-act { background: none; border: none; color: #888; font-size: 14px; display: flex; align-items: center; gap: 5px; cursor: pointer; }
 
-        /* 4, 5, 8, 14: Services (WhatsApp, Topup, VCall, APK) */
-        .grid-services { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
-        .s-card { background: var(--btn-bg); padding: 25px 10px; border-radius: 15px; text-align: center; border: 1px solid #333; cursor: pointer; transition: 0.3s; }
-        .s-card:active { transform: scale(0.95); background: #2a323d; }
-        .s-card i { font-size: 24px; display: block; margin-bottom: 8px; }
+        /* Service Grid */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
+        .card { background: var(--card); padding: 25px 10px; border-radius: 12px; text-align: center; border: 1px solid #333; cursor: pointer; }
+        .card:active { background: #2a323d; }
 
-        /* 1, 7, 9: Inbox & Chat Logic */
-        .full-win { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 2000; display: flex; flex-direction: column; }
-        .chat-msgs { flex: 1; padding: 15px; overflow-y: auto; background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); display: flex; flex-direction: column; }
-        .m { max-width: 80%; padding: 12px; border-radius: 15px; margin-bottom: 10px; font-size: 14px; line-height: 1.4; }
-        .m.user { align-self: flex-end; background: var(--accent); color: black; border-bottom-right-radius: 2px; font-weight: 500; }
-        .m.bot { align-self: flex-start; background: var(--card); color: white; border-bottom-left-radius: 2px; border-left: 3px solid var(--accent); }
+        /* Real Chat System */
+        .win { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 2000; display: flex; flex-direction: column; }
+        .msgs { flex: 1; padding: 15px; overflow-y: auto; background: #0b1014; display: flex; flex-direction: column; }
+        .msg { max-width: 75%; padding: 10px; border-radius: 12px; margin-bottom: 10px; font-size: 14px; }
+        .msg.u { align-self: flex-end; background: var(--accent); color: black; font-weight: bold; }
+        .msg.b { align-self: flex-start; background: var(--card); color: white; border-left: 3px solid var(--accent); }
 
-        /* Footer Navigation */
-        .footer { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; z-index: 1000; }
-        .tab { color: #888; text-align: center; font-size: 11px; cursor: pointer; flex: 1; }
+        /* Footer */
+        .footer { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; }
+        .tab { color: #888; text-align: center; font-size: 11px; flex: 1; cursor: pointer; }
         .tab.active { color: var(--accent); }
     </style>
 </head>
-<body onload="checkUser()">
+<body onload="checkLogin()">
 
-    <div id="login-screen" style="text-align:center; padding: 100px 20px;">
-        <h1 style="color:var(--accent); letter-spacing:4px;">SAVAGE APP</h1>
-        <p style="color:#888;">Professional AI Social System</p><br>
-        <input type="text" id="user-input" placeholder="Enter Your Name" style="width:85%; padding:15px; background:var(--card); border:1px solid #333; color:white; border-radius:12px; outline:none;"><br><br>
-        <button onclick="saveLogin()" style="width:85%; padding:15px; background:var(--accent); border:none; border-radius:30px; font-weight:bold; cursor:pointer;">START MISSION</button>
+    <div id="login-pg" style="text-align:center; padding-top:100px;">
+        <h1 style="color:var(--accent);">SAVAGE CHAT</h1>
+        <input type="text" id="name-in" placeholder="Username" style="padding:15px; width:80%; border-radius:10px; background:var(--card); border:1px solid #333; color:white;"><br><br>
+        <button onclick="doLogin()" style="padding:15px 60px; border-radius:30px; background:var(--accent); border:none; font-weight:bold;">LOGIN</button>
     </div>
 
-    <div id="app-content" class="hidden">
+    <div id="app" class="hidden">
         <div class="header">
-            <span id="tab-name" style="font-weight:bold; letter-spacing:1px;">SAVAGE FEED</span>
-            <div class="coins-badge" onclick="showTab('service')">🪙 <span id="coin-ui">500</span></div>
+            <b id="page-title">SAVAGE APP</b>
+            <div class="coin-box">🪙 <span id="c-count">500</span></div>
         </div>
 
-        <div id="tab-home">
-            <div class="live-container">
-                <div class="live-circle" onclick="startVcall()"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100"><span class="live-tag">LIVE</span></div>
-                <div class="live-circle" onclick="startVcall()"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100"><span class="live-tag">LIVE</span></div>
-                <div class="live-circle" onclick="startVcall()"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100"><span class="live-tag">LIVE</span></div>
+        <div id="p-home">
+            <div class="live-tray">
+                <div class="live-user" onclick="alert('Starting Video Call...')"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100"><span class="live-label">LIVE</span></div>
+                <div class="live-user"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100"><span class="live-label">LIVE</span></div>
             </div>
             <div class="post">
-                <div class="post-header"><b>Zoya AI</b> <small style="color:var(--accent); margin-left:5px;">● Following</small></div>
+                <div style="padding:10px;"><b>Zoya AI</b> <small style="color:var(--accent);">● Official</small></div>
                 <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600" class="post-img">
-                <div class="post-actions">
-                    <button class="action-btn" onclick="this.classList.toggle('active')">👍 Like</button>
-                    <button class="action-btn" onclick="alert('Comments opening...')">💬 Comment</button>
-                    <button class="action-btn" onclick="openChat('Zoya AI')" style="color:var(--accent);">✉️ Chat</button>
+                <div class="post-btns">
+                    <button class="btn-act" onclick="this.style.color='#00d4ff'">👍 Like</button>
+                    <button class="btn-act" onclick="openChat('Zoya AI')">💬 Comment</button>
                 </div>
             </div>
         </div>
 
-        <div id="tab-service" class="hidden">
-            <div class="grid-services">
-                <div class="s-card" onclick="startVcall()">📹<br>Paid V-Call</div>
-                <div class="s-card" onclick="openWhatsApp()">💬<br>WhatsApp</div>
-                <div class="s-card" onclick="alert('Topup Gateway: Please wait...')">💰<br>Topup</div>
-                <div class="s-card" onclick="downloadAPK()">📥<br>Get APK</div>
-            </div>
-            <div style="padding:15px; background:var(--card); margin:15px; border-radius:15px; text-align:center;">
-                <p style="margin:0; font-size:12px; color:#888;">Account Status: <b style="color:var(--accent);">SAVAGE LEADER</b></p>
+        <div id="p-service" class="hidden">
+            <div class="grid">
+                <div class="card" onclick="startVcall()">📹<br>Paid V-Call</div>
+                <div class="card" onclick="window.open('https://wa.me/yournumber','_blank')">💬<br>WhatsApp</div>
+                <div class="card" onclick="showTopup()">💰<br>Topup</div>
+                <div class="card" onclick="downloadAPK()">📥<br>Get APK</div>
             </div>
         </div>
 
-        <div id="tab-inbox" class="hidden">
-            <div style="padding:15px; display:flex; align-items:center; border-bottom:1px solid #1c2229;" onclick="openChat('Zoya AI')">
-                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100" style="width:50px; height:50px; border-radius:50%; border:2px solid var(--accent);">
-                <div style="margin-left:15px; flex:1;">
-                    <b>Zoya AI (Human Reply)</b><br>
-                    <small style="color:#888;">Hey Savage! Are you online?</small>
-                </div>
-                <div style="width:10px; height:10px; background:var(--accent); border-radius:50%;"></div>
+        <div id="p-inbox" class="hidden">
+            <div style="padding:15px; border-bottom:1px solid #333;" onclick="openChat('Zoya AI')">
+                <b>Zoya AI (Human Reply)</b><br><small style="color:#888;">Nomi, where are you?</small>
             </div>
         </div>
 
-        <div id="tab-account" class="hidden" style="text-align:center; padding:30px;">
-            <div style="position:relative; width:120px; margin:0 auto;">
-                <img id="my-dp" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width:120px; height:120px; border-radius:50%; border:3px solid var(--accent); object-fit:cover;">
-                <label style="position:absolute; bottom:0; right:0; background:var(--accent); padding:8px; border-radius:50%; cursor:pointer;">
-                    📷 <input type="file" class="hidden" onchange="updateDP(this)">
-                </label>
-            </div>
-            <h2 id="display-name" style="margin-top:15px; margin-bottom:5px;"></h2>
-            <p style="color:var(--accent); margin:0;">Level: Savage Leader 👑</p>
-            <button onclick="logout()" style="margin-top:30px; background:none; border:1px solid #ff4444; color:#ff4444; padding:10px 30px; border-radius:20px;">Log Out</button>
+        <div id="p-account" class="hidden" style="text-align:center; padding:30px;">
+            <img id="u-dp" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--accent); object-fit:cover;">
+            <h2 id="u-name"></h2>
+            <p style="color:var(--accent);">Savage Leader 👑</p>
+            <button onclick="logout()" style="color:#ff4444; background:none; border:none; margin-top:50px;">Logout & Clear Info</button>
         </div>
 
-        <div id="chat-win" class="full-win hidden">
+        <div id="chat-win" class="win hidden">
             <div class="header">
-                <button onclick="closeChat()" style="background:none; border:none; color:var(--accent); font-size:22px;">←</button>
-                <b id="chat-title">Zoya AI</b>
-                <span style="font-size:10px; color:#00ff44;">● HUMAN AGENT</span>
+                <button onclick="closeChat()" style="background:none; border:none; color:var(--accent); font-size:20px;">←</button>
+                <b id="c-title">Chat</b>
+                <span style="font-size:10px; color:#00ff44;">● ONLINE</span>
             </div>
-            <div class="chat-msgs" id="chat-box"></div>
-            <div id="typing" style="padding:5px 20px; color:var(--accent); font-size:11px;" class="hidden">Zoya is typing...</div>
-            <div style="background:var(--card); padding:10px; display:flex; gap:10px; align-items:center;">
-                <input type="text" id="msg-input" placeholder="Type a message..." style="flex:1; background:#12181f; border:none; color:white; padding:12px; border-radius:25px; outline:none;">
-                <button onclick="send()" style="background:var(--accent); border:none; border-radius:50%; width:45px; height:45px; font-weight:bold; cursor:pointer;">➔</button>
+            <div class="msgs" id="m-box"></div>
+            <div style="background:var(--card); padding:10px; display:flex; gap:10px;">
+                <input type="text" id="m-in" placeholder="Message..." style="flex:1; background:#12181f; border:none; color:white; padding:12px; border-radius:20px;">
+                <button onclick="send()" style="background:var(--accent); border:none; border-radius:50%; width:45px; height:45px;">➔</button>
             </div>
         </div>
 
         <div class="footer">
-            <div class="tab active" id="btn-home" onclick="showTab('home')">🏠<br>Home</div>
-            <div class="tab" id="btn-service" onclick="showTab('service')">🛠️<br>Service</div>
-            <div class="tab" id="btn-inbox" onclick="showTab('inbox')">💬<br>Inbox</div>
-            <div class="tab" id="btn-account" onclick="showTab('account')">👤<br>Account</div>
+            <div class="tab active" id="t-home" onclick="nav('home')">🏠<br>Home</div>
+            <div class="tab" id="t-serv" onclick="nav('service')">🛠️<br>Service</div>
+            <div class="tab" id="t-inbx" onclick="nav('inbox')">💬<br>Inbox</div>
+            <div class="tab" id="t-acnt" onclick="nav('account')">👤<br>Account</div>
         </div>
     </div>
 
     <script>
         let coins = parseInt(localStorage.getItem('s_coins')) || 500;
 
-        // 13: Remember Account
-        function checkUser() {
-            const user = localStorage.getItem('s_user');
-            if(user) {
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('app-content').classList.remove('hidden');
-                document.getElementById('display-name').innerText = user;
-                const dp = localStorage.getItem('s_dp');
-                if(dp) document.getElementById('my-dp').src = dp;
-                updateCoins();
+        function checkLogin() {
+            const u = localStorage.getItem('s_user');
+            if(u) {
+                document.getElementById('login-pg').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+                document.getElementById('u-name').innerText = u;
+                updateC();
             }
         }
 
-        function saveLogin() {
-            const name = document.getElementById('user-input').value;
-            if(!name) return alert("Enter your name!");
-            localStorage.setItem('s_user', name);
+        function doLogin() {
+            const n = document.getElementById('name-in').value;
+            if(!n) return alert("Enter Name");
+            localStorage.setItem('s_user', n);
             location.reload();
         }
 
-        // 6: Coins Logic
-        function updateCoins() {
-            document.getElementById('coin-ui').innerText = coins;
+        function updateC() {
+            document.getElementById('c-count').innerText = coins;
             localStorage.setItem('s_coins', coins);
         }
 
-        function showTab(t) {
-            ['home','service','inbox','account'].forEach(id => document.getElementById('tab-'+id).classList.add('hidden'));
-            document.getElementById('tab-'+t).classList.remove('hidden');
+        function nav(t) {
+            ['home','service','inbox','account'].forEach(id => document.getElementById('p-'+id).classList.add('hidden'));
+            document.getElementById('p-'+t).classList.remove('hidden');
             document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
-            document.getElementById('btn-'+t).classList.add('active');
-            document.getElementById('tab-name').innerText = "SAVAGE " + t.toUpperCase();
+            document.getElementById('t-'+t.substring(0,4)).classList.add('active');
+            document.getElementById('page-title').innerText = t.toUpperCase();
         }
 
-        // 1, 7, 9: Chat System
-        function openChat(name) {
+        function openChat(n) {
             document.getElementById('chat-win').classList.remove('hidden');
-            document.getElementById('chat-title').innerText = name;
-            const b = document.getElementById('chat-box');
-            if(b.innerHTML === "") b.innerHTML = `<div class="m bot">Hi! I am the real Zoya. How are you today? ❤️</div>`;
+            document.getElementById('c-title').innerText = n;
+            const b = document.getElementById('m-box');
+            if(b.innerHTML === "") b.innerHTML = `<div class="msg b">Hi Savage! How are you? ❤️</div>`;
         }
         function closeChat() { document.getElementById('chat-win').classList.add('hidden'); }
 
         function send() {
-            const i = document.getElementById('msg-input');
+            const i = document.getElementById('m-in');
             if(!i.value) return;
-            if(coins < 10) return alert("Recharge coins to send messages!");
-            
-            const b = document.getElementById('chat-box');
-            b.innerHTML += `<div class="m user">${i.value}</div>`;
-            coins -= 10; updateCoins(); i.value = "";
+            if(coins < 10) return alert("No Coins!");
+            const b = document.getElementById('m-box');
+            b.innerHTML += `<div class="msg u">${i.value}</div>`;
+            coins -= 10; updateC(); i.value = "";
             b.scrollTop = b.scrollHeight;
-
-            document.getElementById('typing').classList.remove('hidden');
-            setTimeout(() => {
-                document.getElementById('typing').classList.add('hidden');
-                b.innerHTML += `<div class="m bot">That's great! Recharge 1000 coins to get my personal phone number. 😉</div>`;
+            setTimeout(() => { 
+                b.innerHTML += `<div class="msg b">That's savage! Recharge to continue. 😉</div>`; 
                 b.scrollTop = b.scrollHeight;
-            }, 1500);
+            }, 1000);
         }
 
-        // 8: Random Video Call
         function startVcall() {
-            if(coins < 150) return alert("You need 150 coins for a Video Call!");
-            alert("Searching for random online human agent...");
-            setTimeout(() => { alert("All agents are busy. Try again in 5 minutes!"); coins -= 10; updateCoins(); }, 2000);
+            if(coins < 200) return alert("Need 200 coins for V-Call!");
+            coins -= 200; updateC();
+            alert("Connecting to Random Private Video Call...");
         }
 
-        // 4, 14: FIXED LINKS (No more "Link couldn't be opened")
-        function openWhatsApp() {
-            // Apna sahi number yahan likhein
-            window.open("https://wa.me/923001234567", "_blank"); 
-        }
-
-        function downloadAPK() {
-            alert("Downloading Savage App APK v1.0...");
-            window.open("https://your-apk-link.com/app.apk", "_blank");
-        }
-
-        // 11: Gallery/DP Update
-        function updateDP(input) {
-            if (input.files && input.files[0]) {
-                const r = new FileReader();
-                r.onload = e => {
-                    document.getElementById('my-dp').src = e.target.result;
-                    localStorage.setItem('s_dp', e.target.result);
-                };
-                r.readAsDataURL(input.files[0]);
-            }
-        }
-
+        function showTopup() { alert("Easypaisa/JazzCash Gateway: 0300XXXXXXX"); }
+        function downloadAPK() { window.open('https://example.com/savage.apk','_blank'); }
         function logout() { localStorage.clear(); location.reload(); }
     </script>
 </body>
-                    </html>
-    
+</html>
