@@ -3,15 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SavageChat | Secured Permissions</title>
+    <title>SavageChat | Social App</title>
     <style>
         body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 70px; }
         .hidden { display: none !important; }
         .nav { background: #1c1f26; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .stat-card { background: linear-gradient(135deg, #1c1f26, #111); padding: 20px; border-radius: 15px; margin: 15px; border: 1px solid #333; }
+        
+        /* General UI */
         input, select, textarea { width: 90%; max-width: 300px; padding: 12px; margin: 10px auto; border-radius: 10px; background: #1c1f26; color: white; border: 1px solid #444; display: block; }
         .btn-action { background: #00d4ff; color: black; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .perm-status { font-size: 11px; margin-top: 10px; color: #ffaa00; }
+        
+        /* Post Styling */
+        .post-card { background: #1c1f26; border-radius: 15px; margin: 15px; border: 1px solid #333; overflow: hidden; }
+        .post-header { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #333; }
+        .post-dp { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #00d4ff; background-size: cover; margin-right: 10px; }
+        .post-img { width: 100%; height: auto; display: block; }
+        .post-content { padding: 15px; font-size: 14px; color: #eee; }
+
+        /* Profile DP Styling */
+        .profile-dp-setup { text-align: center; padding: 20px; position: relative; }
+        .current-dp { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #00d4ff; background-size: cover; margin-bottom: 10px; background-position: center; }
+        
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1c1f26; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
     </style>
 </head>
@@ -21,11 +33,10 @@
         <h2 style="color:#00d4ff;">SAVAGE CHAT</h2>
         <input type="text" id="uname" placeholder="Full Name">
         <select id="urole">
-            <option value="gifter">I am a Boy (Gifter)</option>
-            <option value="earner">I am a Girl (Earner)</option>
+            <option value="gifter">Male (Gifter)</option>
+            <option value="earner">Female (Earner)</option>
         </select>
         <button class="btn-action" onclick="login()">Create Account</button>
-        <p style="font-size: 10px; color: #888; margin-top: 20px;">By joining, you allow Microphone & Camera access.</p>
     </div>
 
     <div id="app-screen" class="hidden">
@@ -34,41 +45,37 @@
             <button onclick="logout()" style="background:none; border:none; color:#ff0055; font-size:12px;">Logout</button>
         </div>
 
-        <div id="home-view">
-            <div class="stat-card" style="border: 1px solid #00ff44;">
-                <h4 style="margin:0; color:#00ff44;">System Permissions</h4>
-                <p style="font-size:12px; color:#aaa;">Enable all for smooth Video Calls</p>
-                <div id="perm-list" style="text-align:left; font-size:13px;">
-                    🎤 Mic: <span id="mic-st">Checking...</span><br>
-                    📷 Camera: <span id="cam-st">Checking...</span><br>
-                    📍 Location: <span id="loc-st">Checking...</span>
-                </div>
-                <button class="btn-action" style="font-size:12px;" onclick="requestAllPermissions()">Allow All Permissions</button>
+        <div id="feed-view">
+            <div id="create-post-card" class="post-card hidden" style="padding:15px; text-align:center;">
+                <textarea id="new-post-text" placeholder="Write a Savage Status..."></textarea>
+                <input type="file" id="new-post-file" accept="image/*" style="font-size:10px;">
+                <button class="btn-action" onclick="submitPost()">Post Status/Media</button>
             </div>
-
-            <div id="user-stats" class="stat-card" style="text-align:center;">
-                <p>Welcome to Savage World</p>
-                <button class="btn-action" onclick="showPage('profile')">My Profile</button>
-            </div>
+            
+            <div id="feed-container"></div>
         </div>
 
         <div id="profile-view" class="hidden">
-            <div style="text-align:center; padding:20px;">
-                <h3>Profile Details</h3>
-                <textarea id="edit-bio" placeholder="Bio"></textarea>
-                <button class="btn-action" onclick="saveProfile()">Save</button>
+            <div class="profile-dp-setup">
+                <div id="my-current-dp" class="current-dp" style="background-image:url('https://via.placeholder.com/100/00d4ff/000000?text=Savage')"></div>
+                <input type="file" id="dp-file" accept="image/*" onchange="uploadDP()" style="font-size:10px; margin-top:10px;">
+                <p style="font-size:12px; color:#aaa;">Click to upload Profile Picture</p>
+            </div>
+            <div style="text-align:center;">
+                <input type="text" id="edit-bio" placeholder="Profile Bio">
+                <button class="btn-action" onclick="saveProfile()">Save Details</button>
             </div>
         </div>
 
         <div class="bottom-nav">
-            <div onclick="showPage('home')">🏠 Home</div>
-            <div onclick="alert('Chat Active')">💬 Inbox</div>
+            <div onclick="showPage('feed')">🏠 Feed</div>
             <div onclick="showPage('profile')">👤 Profile</div>
         </div>
     </div>
 
     <script>
         let userData = {};
+        let myPosts = [];
 
         function checkLogin() {
             const savedUser = localStorage.getItem('savageUser');
@@ -82,7 +89,12 @@
             let name = document.getElementById('uname').value;
             let role = document.getElementById('urole').value;
             if(!name) return;
-            userData = { name: name, role: role, bio: "Available" };
+            userData = { 
+                name: name, 
+                role: role, 
+                bio: "New Savage User", 
+                dp: "https://via.placeholder.com/100/00d4ff/000000?text=Savage" 
+            };
             localStorage.setItem('savageUser', JSON.stringify(userData));
             loadApp();
         }
@@ -91,44 +103,98 @@
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-screen').classList.remove('hidden');
             document.getElementById('name-tag').innerText = userData.name.toUpperCase();
-            requestAllPermissions();
+            
+            // Set current DP and Bio in settings
+            document.getElementById('my-current-dp').style.background_image = `url('${userData.dp}')`;
+            document.getElementById('edit-bio').value = userData.bio;
+
+            // Show post creation only for Females (Earners)
+            if(userData.role === 'earner') {
+                document.getElementById('create-post-card').classList.remove('hidden');
+            }
+            loadPosts();
         }
 
-        async function requestAllPermissions() {
-            try {
-                // Mic & Camera Permission
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-                document.getElementById('mic-st').innerText = "✅ Allowed";
-                document.getElementById('cam-st').innerText = "✅ Allowed";
-                // Speaker auto access with audio
-                
-                // Location Permission
-                navigator.geolocation.getCurrentPosition(() => {
-                    document.getElementById('loc-st').innerText = "✅ Allowed";
-                }, () => {
-                    document.getElementById('loc-st').innerText = "❌ Denied";
-                });
-
-                // Stop stream after check
-                stream.getTracks().forEach(track => track.stop());
-
-            } catch (err) {
-                document.getElementById('mic-st').innerText = "❌ Denied";
-                document.getElementById('cam-st').innerText = "❌ Denied";
-                alert("Please enable Camera & Mic in Browser Settings for Video Calls.");
+        // --- DP UPLOAD SYSTEM ---
+        function uploadDP() {
+            const file = document.getElementById('dp-file').files[0];
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                userData.dp = reader.result; // Base64 image
+                document.getElementById('my-current-dp').style.background_image = `url('${userData.dp}')`;
+                localStorage.setItem('savageUser', JSON.stringify(userData));
+                alert("Profile Picture Updated!");
             }
+            if (file) { reader.readAsDataURL(file); }
+        }
+
+        // --- POSTING SYSTEM ---
+        function submitPost() {
+            let text = document.getElementById('new-post-text').value;
+            let file = document.getElementById('new-post-file').files[0];
+            if(!text && !file) return;
+
+            let reader = new FileReader();
+            reader.onloadend = function() {
+                const newPost = {
+                    id: Date.now(),
+                    name: userData.name,
+                    dp: userData.dp,
+                    text: text,
+                    media: file ? reader.result : null // Base64 media
+                };
+                myPosts.unshift(newPost); // Add to top
+                saveAndRenderPosts();
+                document.getElementById('new-post-text').value = '';
+                document.getElementById('new-post-file').value = '';
+            }
+            if(file) { reader.readAsDataURL(file); }
+            else { reader.onloadend(); } // Submit text only
+        }
+
+        function loadPosts() {
+            const savedPosts = localStorage.getItem('savagePosts');
+            myPosts = savedPosts ? JSON.parse(savedPosts) : [];
+            renderPosts();
+        }
+
+        function saveAndRenderPosts() {
+            localStorage.setItem('savagePosts', JSON.stringify(myPosts));
+            renderPosts();
+        }
+
+        function renderPosts() {
+            const container = document.getElementById('feed-container');
+            container.innerHTML = '';
+            myPosts.forEach(post => {
+                let card = document.createElement('div');
+                card.className = "post-card";
+                card.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-dp" style="background-image:url('${post.dp}')"></div>
+                        <b>${post.name.toUpperCase()}</b>
+                    </div>
+                    ${post.media ? `<img src="${post.media}" class="post-img">` : ''}
+                    <div class="post-content">${post.text}</div>
+                `;
+                container.appendChild(card);
+            });
         }
 
         function showPage(p) {
-            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('feed-view').classList.add('hidden');
             document.getElementById('profile-view').classList.add('hidden');
             document.getElementById(p + '-view').classList.remove('hidden');
         }
 
-        function logout() {
-            localStorage.clear();
-            location.reload();
+        function saveProfile() {
+            userData.bio = document.getElementById('edit-bio').value;
+            localStorage.setItem('savageUser', JSON.stringify(userData));
+            alert("Profile Bio Saved!");
+            loadApp();
         }
+
+        function logout() { localStorage.clear(); location.reload(); }
     </script>
 </body>
 </html>
