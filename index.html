@@ -7,63 +7,59 @@
     <style>
         body { background: #0b1014; color: white; font-family: sans-serif; margin: 0; padding-bottom: 80px; }
         .hidden { display: none !important; }
-        .nav { background: #1c2229; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .btn-main { background: #00d4ff; color: black; border: none; padding: 12px; border-radius: 25px; font-weight: bold; width: 100%; cursor: pointer; font-size: 14px; }
-        .btn-logout { background: transparent; color: #ff0055; border: 1px solid #ff0055; padding: 5px 15px; border-radius: 15px; cursor: pointer; }
+        .nav { background: #1c2229; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; }
+        .btn-main { background: #00d4ff; color: black; border: none; padding: 12px; border-radius: 25px; font-weight: bold; width: 100%; cursor: pointer; }
         input { width: 80%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #12181f; color: white; }
-        
-        /* Profile Cards */
-        .card { background: #1c2229; border-radius: 15px; margin: 15px; overflow: hidden; border: 1px solid #2a323d; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .card { background: #1c2229; border-radius: 15px; margin: 15px; overflow: hidden; border: 1px solid #2a323d; }
         .card img { width: 100%; height: 350px; object-fit: cover; }
         .card-body { padding: 15px; }
-        .online-tag { background: #00ff44; color: black; font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: bold; text-transform: uppercase; }
-        
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1c2229; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; z-index: 1000; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1c2229; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
+        .profile-info { padding: 20px; text-align: center; }
+        .status-dot { height: 10px; width: 10px; background: #00ff44; border-radius: 50%; display: inline-block; }
     </style>
 </head>
 <body onload="checkLogin()">
 
     <div id="login-page" style="text-align:center; padding-top:100px;">
-        <h1 style="color:#00d4ff; letter-spacing: 2px;">SAVAGE CHAT</h1>
-        <p style="color:#888;">Enter details to start chatting</p>
-        <input type="text" id="username" placeholder="Your Name">
-        <input type="email" id="email" placeholder="Your Email">
-        <br><br>
-        <button class="btn-main" style="max-width:250px;" onclick="handleLogin()">ENTER DASHBOARD</button>
+        <h1 style="color:#00d4ff;">SAVAGE CHAT</h1>
+        <input type="text" id="username" placeholder="Full Name">
+        <input type="email" id="email" placeholder="Email Address">
+        <button class="btn-main" style="max-width:200px;" onclick="handleLogin()">Login</button>
     </div>
 
     <div id="dashboard-page" class="hidden">
         <div class="nav">
-            <span id="display-name" style="color:#00d4ff; font-weight:bold; font-size:18px;"></span>
-            <div style="background:#ffaa00; color:black; padding:5px 15px; border-radius:20px; font-weight:bold; font-size:14px;">🪙 500</div>
+            <span id="display-name" style="color:#00d4ff; font-weight:bold;"></span>
+            <div style="background:#ffaa00; color:black; padding:5px 15px; border-radius:20px; font-weight:bold;">🪙 500</div>
         </div>
 
-        <p style="padding-left:15px; color:#888; font-size:14px; margin-top:20px;">🔥 TRENDING PROFILES</p>
-
-        <div class="card">
-            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500">
-            <div class="card-body">
-                <span class="online-tag">Online</span>
-                <h2 style="margin:10px 0 5px 0;">Zoya AI</h2>
-                <p style="color:#ccc; font-size:13px; margin-bottom:15px;">Hey Savage! Main aapka intezar kar rahi hoon. Chat shuru karein?</p>
-                <button class="btn-main" onclick="alert('Connecting to Secure Chat...')">START FREE CHAT</button>
+        <div id="home-view">
+            <p style="padding:15px; color:#888;">🔥 ONLINE PROFILES</p>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500">
+                <div class="card-body">
+                    <h3><span class="status-dot"></span> Zoya AI</h3>
+                    <button class="btn-main" onclick="openChat('Zoya AI')">START FREE CHAT</button>
+                </div>
             </div>
         </div>
 
-        <div class="card">
-            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500">
-            <div class="card-body">
-                <span class="online-tag">Online</span>
-                <h2 style="margin:10px 0 5px 0;">Aliza Khan</h2>
-                <p style="color:#ccc; font-size:13px; margin-bottom:15px;">Looking for someone to talk to. Are you the one?</p>
-                <button class="btn-main" onclick="alert('Connecting to Secure Chat...')">START FREE CHAT</button>
+        <div id="profile-view" class="hidden">
+            <div class="profile-info">
+                <div style="width:100px; height:100px; background:#00d4ff; border-radius:50%; margin: 0 auto; line-height:100px; font-size:40px; color:black;">👤</div>
+                <h2 id="p-name" style="margin-top:10px;"></h2>
+                <p id="p-email" style="color:#888;"></p>
+                <div style="background:#1c2229; padding:15px; border-radius:10px; margin-top:20px;">
+                    <p>Total Coins: 🪙 500</p>
+                    <p>Rank: Savage Leader</p>
+                </div>
             </div>
         </div>
 
         <div class="bottom-nav">
-            <div onclick="location.reload()" style="cursor:pointer;">🏠 Home</div>
-            <div onclick="alert('Profile Settings Coming Soon!')" style="cursor:pointer;">👤 Profile</div>
-            <div onclick="logout()" style="color:#ff0055; cursor:pointer; font-weight:bold;">Logout</div>
+            <div onclick="showTab('home')">🏠 Home</div>
+            <div onclick="showTab('profile')">👤 Profile</div>
+            <div onclick="logout()" style="color:#ff0055;">🚪 Logout</div>
         </div>
     </div>
 
@@ -71,21 +67,35 @@
         function handleLogin() {
             const name = document.getElementById('username').value;
             const email = document.getElementById('email').value;
-            if(!name || !email) return alert("Please fill both name and email!");
-            
-            const userData = { name: name, email: email };
-            localStorage.setItem('savage_user', JSON.stringify(userData));
-            location.reload(); 
+            if(!name || !email) return alert("Details enter karein!");
+            localStorage.setItem('savage_user', JSON.stringify({name, email}));
+            location.reload();
         }
 
         function checkLogin() {
-            const savedUser = localStorage.getItem('savage_user');
-            if(savedUser) {
-                const user = JSON.parse(savedUser);
+            const user = localStorage.getItem('savage_user');
+            if(user) {
+                const data = JSON.parse(user);
                 document.getElementById('login-page').classList.add('hidden');
                 document.getElementById('dashboard-page').classList.remove('hidden');
-                document.getElementById('display-name').innerText = user.name.toUpperCase();
+                document.getElementById('display-name').innerText = data.name.toUpperCase();
+                document.getElementById('p-name').innerText = data.name;
+                document.getElementById('p-email').innerText = data.email;
             }
+        }
+
+        function showTab(tab) {
+            if(tab === 'home') {
+                document.getElementById('home-view').classList.remove('hidden');
+                document.getElementById('profile-view').classList.add('hidden');
+            } else {
+                document.getElementById('home-view').classList.add('hidden');
+                document.getElementById('profile-view').classList.remove('hidden');
+            }
+        }
+
+        function openChat(name) {
+            alert("Connecting to secure server for " + name + "...");
         }
 
         function logout() {
