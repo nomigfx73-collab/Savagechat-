@@ -3,110 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SavageChat | Official</title>
+    <title>SavageChat | Professional Dashboard</title>
     <style>
-        body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; }
+        body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 70px; }
         .hidden { display: none !important; }
         
-        /* Login UI */
-        .auth-box { padding: 40px 20px; text-align: center; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
-        input, select { width: 90%; max-width: 300px; padding: 12px; margin: 10px auto; border-radius: 10px; border: 1px solid #333; background: #1c1f26; color: white; }
-        .btn-main { background: #00d4ff; color: black; border: none; padding: 15px 40px; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        /* Nav & Headers */
+        .nav { background: #1c1f26; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .tab-header { display: flex; background: #1c1f26; border-bottom: 1px solid #333; }
+        .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; color: #888; font-weight: bold; }
+        .tab.active { color: #00d4ff; border-bottom: 3px solid #00d4ff; }
 
-        /* Dashboard UI */
-        .nav { background: #1c1f26; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; }
-        .card { background: #1c1f26; border-radius: 15px; margin: 15px; overflow: hidden; border: 1px solid #333; position: relative; }
-        img { width: 100%; height: 250px; object-fit: cover; }
-        .info { padding: 15px; }
-        .call-btn { background: #ff0055; color: white; border: none; width: 100%; padding: 12px; font-weight: bold; }
-        
-        /* Earnings View (For Girls) */
-        .earnings-card { background: linear-gradient(45deg, #1c1f26, #2d3436); padding: 20px; border-radius: 15px; margin: 20px; border-left: 5px solid #00ff44; }
-        
+        /* Inbox Style */
+        .chat-list { padding: 10px; }
+        .chat-item { display: flex; align-items: center; padding: 15px; background: #1c1f26; border-radius: 15px; margin-bottom: 10px; cursor: pointer; border: 1px solid #333; }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; background-size: cover; position: relative; border: 2px solid #00d4ff; }
+        .online-dot { position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; background: #00ff44; border-radius: 50%; border: 2px solid #1c1f26; }
+        .chat-info { flex: 1; margin-left: 15px; }
+        .chat-name { font-weight: bold; font-size: 16px; margin-bottom: 4px; }
+        .chat-preview { font-size: 12px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+        .chat-time { font-size: 10px; color: #555; text-align: right; }
+
+        /* General UI */
+        .auth-box { text-align: center; padding: 50px 20px; min-height: 100vh; }
+        input, select { width: 90%; max-width: 300px; padding: 12px; margin: 10px auto; border-radius: 10px; background: #1c1f26; color: white; border: 1px solid #333; }
+        .btn-main { background: #00d4ff; color: black; border: none; padding: 15px 40px; border-radius: 25px; font-weight: bold; cursor: pointer; }
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1c1f26; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
+        .card { background: #1c1f26; border-radius: 15px; margin: 15px; overflow: hidden; }
+        img { width: 100%; height: 250px; object-fit: cover; }
     </style>
 </head>
 <body>
 
     <div id="auth-screen" class="auth-box">
-        <h2 style="color: #00d4ff;">SAVAGE CHAT AI</h2>
-        <p style="font-size: 12px; color: #888;">Complete your profile to enter</p>
+        <h1 style="color:#00d4ff;">SAVAGE CHAT</h1>
         <input type="text" id="name" placeholder="Full Name">
         <input type="number" id="age" placeholder="Age (18+)">
         <select id="role">
-            <option value="gifter">I am a Boy (Gifter)</option>
-            <option value="earner">I am a Girl (Earner)</option>
+            <option value="gifter">Male (Gifter)</option>
+            <option value="earner">Female (Earner)</option>
         </select>
-        <button class="btn-main" onclick="startApp()">Enter Savage World</button>
-        <p style="font-size: 10px; color: #ff0055; margin-top: 20px;">⚠️ Restricted to 18+ users only.</p>
+        <button class="btn-main" onclick="startApp()">Start Chatting</button>
     </div>
 
     <div id="app-screen" class="hidden">
         <div class="nav">
-            <span id="display-name" style="font-weight: bold; color: #00d4ff;"></span>
-            <div id="coin-balance" style="background: #ffaa00; color: black; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">🪙 0</div>
+            <span id="user-display" style="font-weight:bold;">SAVAGE</span>
+            <div style="background:#ffaa00; color:black; padding:5px 12px; border-radius:20px; font-weight:bold; font-size:12px;">🪙 0</div>
         </div>
 
-        <div id="gifter-view" class="hidden">
+        <div class="tab-header">
+            <div id="tab-home" class="tab active" onclick="showSection('home')">Home</div>
+            <div id="tab-inbox" class="tab" onclick="showSection('inbox')">Inbox</div>
+        </div>
+
+        <div id="home-section">
             <div class="card">
                 <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500">
-                <div class="info">
-                    <h3>Zoya (AI Friend)</h3>
-                    <p style="color: #00ff44; font-size: 12px;">● Online & Ready to Chat</p>
+                <div style="padding:15px;">
+                    <h3>Zoya AI</h3>
+                    <button style="width:100%; background:#ff0055; border:none; padding:12px; color:white; font-weight:bold; border-radius:10px;">VIDEO CALL</button>
                 </div>
-                <button class="call-btn" onclick="alert('Please recharge coins to call!')">START VIDEO CALL</button>
             </div>
-            <center><button class="btn-main" style="background:#ffaa00;">+ RECHARGE COINS</button></center>
         </div>
 
-        <div id="earner-view" class="hidden">
-            <div class="earnings-card">
-                <h4 style="margin:0;">My Earnings</h4>
-                <p style="font-size: 24px; font-weight: bold; color: #00ff44; margin: 10px 0;">Rs. 0.00</p>
-                <small style="color: #aaa;">Total Coins Collected: 0</small><br>
-                <button style="margin-top:10px; background:#00ff44; border:none; padding:5px 10px; border-radius:5px; font-weight:bold;">Withdraw to JazzCash</button>
-            </div>
-            <p style="padding: 20px; font-size: 14px; color: #888;">Stay online to receive calls from users. Your earnings will update automatically.</p>
-        </div>
+        <div id="inbox-section" class="hidden">
+            <div class="chat-list">
+                <div class="chat-item" onclick="alert('System: Please recharge to reply')">
+                    <div class="avatar" style="background-image: url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100');"><div class="online-dot"></div></div>
+                    <div class="chat-info">
+                        <div class="chat-name">Zoya AI (Online)</div>
+                        <div class="chat-preview">Hey baby! Aapne message nahi kiya? Main intezaar kar rahi hoon... 💋</div>
+                    </div>
+                    <div class="chat-time">2m ago</div>
+                </div>
 
-        <div class="bottom-nav">
-            <div onclick="location.reload()">🏠 Home</div>
-            <div onclick="alert('No new messages')">💬 Inbox</div>
-            <div onclick="alert('Profile Settings')">👤 Profile</div>
+                <div class="chat-item" onclick="alert('System: Please recharge to reply')">
+                    <div class="avatar" style="background-image: url('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=100');"><div class="online-dot"></div></div>
+                    <div class="chat-info">
+                        <div class="chat-name">Sara Malik</div>
+                        <div class="chat-preview">Are you free for a private video call? I have a surprise... 😉</div>
+                    </div>
+                    <div class="chat-time">1h ago</div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         function startApp() {
-            const name = document.getElementById('name').value;
-            const age = document.getElementById('age').value;
-            const role = document.getElementById('role').value;
-
-            if(name === "" || age === "") {
-                alert("Please fill all details!");
-                return;
-            }
-            if(age < 18) {
-                alert("Only 18+ allowed!");
-                return;
-            }
-
-            // Hide Login, Show App
+            let name = document.getElementById('name').value;
+            let age = document.getElementById('age').value;
+            if(name === "" || age < 18) { alert("Invalid details!"); return; }
+            
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-screen').classList.remove('hidden');
-            
-            document.getElementById('display-name').innerText = name.toUpperCase();
+            document.getElementById('user-display').innerText = name.toUpperCase();
+        }
 
-            // Show role-specific dashboard
-            if(role === 'gifter') {
-                document.getElementById('gifter-view').classList.remove('hidden');
-            } else {
-                document.getElementById('earner-view').classList.remove('hidden');
-                document.getElementById('coin-balance').innerText = "Balance: Rs 0";
-                document.getElementById('coin-balance').style.background = "#00ff44";
-            }
+        function showSection(section) {
+            document.getElementById('home-section').classList.add('hidden');
+            document.getElementById('inbox-section').classList.add('hidden');
+            document.getElementById('tab-home').classList.remove('active');
+            document.getElementById('tab-inbox').classList.remove('active');
+
+            document.getElementById(section + '-section').classList.remove('hidden');
+            document.getElementById('tab-' + section).classList.add('active');
         }
     </script>
 </body>
-    </html>
-    
+</html>
