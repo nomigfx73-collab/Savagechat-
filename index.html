@@ -8,91 +8,86 @@
         body { background: #0b1014; color: white; font-family: sans-serif; margin: 0; padding-bottom: 80px; }
         .hidden { display: none !important; }
         .nav { background: #1c2229; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .btn-main { background: #00d4ff; color: black; border: none; padding: 12px; border-radius: 25px; font-weight: bold; width: 100%; cursor: pointer; transition: 0.3s; }
-        .btn-main:active { transform: scale(0.95); }
-        input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #12181f; color: white; }
+        .btn-main { background: #00d4ff; color: black; border: none; padding: 12px; border-radius: 25px; font-weight: bold; width: 100%; cursor: pointer; }
         
-        /* Dashboard Cards */
-        .card { background: #1c2229; border-radius: 15px; margin: 15px; overflow: hidden; border: 1px solid #2a323d; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        /* Inbox Styles */
+        .chat-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #1c2229; cursor: pointer; transition: 0.3s; }
+        .chat-item:active { background: #12181f; }
+        .chat-avatar { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; margin-right: 15px; border: 2px solid #00d4ff; }
+        .chat-info { flex: 1; }
+        .chat-name { font-weight: bold; font-size: 16px; margin-bottom: 4px; display: flex; justify-content: space-between; }
+        .chat-msg { color: #888; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+        .time { font-size: 11px; color: #555; font-weight: normal; }
+        .unread-dot { width: 10px; height: 10px; background: #00d4ff; border-radius: 50%; float: right; margin-top: 5px; }
+
+        /* General Layout */
+        .card { background: #1c2229; border-radius: 15px; margin: 15px; overflow: hidden; border: 1px solid #2a323d; }
         .card img { width: 100%; height: 350px; object-fit: cover; }
         .card-body { padding: 15px; }
-        .online-tag { background: #00ff44; color: black; font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: bold; }
-        
-        /* Profile Layout */
-        .profile-header { text-align: center; padding: 30px 20px; }
-        .avatar { width: 100px; height: 100px; background: linear-gradient(45deg, #00d4ff, #0055ff); border-radius: 50%; margin: 0 auto; line-height: 100px; font-size: 40px; color: black; border: 3px solid #00d4ff; }
-        .stat-box { background: #1c2229; padding: 15px; border-radius: 12px; margin: 10px 15px; border: 1px solid #333; display: flex; justify-content: space-between; }
-
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1c2229; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; z-index: 1000; }
-        .nav-item { cursor: pointer; text-align: center; font-size: 14px; color: #888; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1c2229; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; z-index: 1000; }
+        .nav-item { cursor: pointer; text-align: center; font-size: 12px; color: #888; flex: 1; }
         .nav-item.active { color: #00d4ff; font-weight: bold; }
+        input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #12181f; color: white; }
     </style>
 </head>
 <body onload="checkLogin()">
 
     <div id="login-page" style="text-align:center; padding-top:100px;">
-        <h1 style="color:#00d4ff; letter-spacing: 2px;">SAVAGE CHAT</h1>
-        <p style="color:#888;">Naya account banayein ya login karein</p>
+        <h1 style="color:#00d4ff;">SAVAGE CHAT</h1>
         <input type="text" id="username" placeholder="Aapka Naam">
         <input type="email" id="email" placeholder="Email Address">
-        <br><br>
-        <button class="btn-main" style="max-width:250px;" onclick="handleLogin()">ENTER SAVAGE WORLD</button>
+        <button class="btn-main" style="max-width:250px; margin-top: 20px;" onclick="handleLogin()">JOIN SAVAGE CLUB</button>
     </div>
 
     <div id="app-content" class="hidden">
-        
         <div class="nav">
-            <span id="nav-title" style="color:#00d4ff; font-weight:bold; font-size:18px;">HOME</span>
-            <div style="background:#ffaa00; color:black; padding:5px 15px; border-radius:20px; font-weight:bold; font-size:14px;">🪙 <span id="coin-count">500</span></div>
+            <span id="nav-title" style="color:#00d4ff; font-weight:bold; font-size:18px;">EXPLORE</span>
+            <div style="background:#ffaa00; color:black; padding:5px 15px; border-radius:20px; font-weight:bold; font-size:13px;">🪙 500</div>
         </div>
 
         <div id="home-tab">
-            <p style="padding-left:15px; color:#888; font-size:14px; margin-top:20px;">🔥 ONLINE NOW</p>
             <div class="card">
                 <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500">
                 <div class="card-body">
-                    <span class="online-tag">Online</span>
-                    <h2 style="margin:10px 0 5px 0;">Zoya AI</h2>
-                    <button class="btn-main" onclick="alert('Connecting to Zoya...')">FREE CHAT</button>
-                </div>
-            </div>
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500">
-                <div class="card-body">
-                    <span class="online-tag">Online</span>
-                    <h2 style="margin:10px 0 5px 0;">Aliza Khan</h2>
-                    <button class="btn-main" onclick="alert('Connecting to Aliza...')">FREE CHAT</button>
+                    <h3>Zoya AI</h3>
+                    <button class="btn-main" onclick="showTab('inbox')">SEND MESSAGE</button>
                 </div>
             </div>
         </div>
 
-        <div id="profile-tab" class="hidden">
-            <div class="profile-header">
-                <div class="avatar">👤</div>
-                <h2 id="p-display-name" style="margin: 15px 0 5px 0;"></h2>
-                <p id="p-display-email" style="color:#888; font-size:14px;"></p>
-            </div>
-            
-            <div class="stat-box">
-                <span>Account Rank:</span>
-                <span style="color:#00d4ff; font-weight:bold;">Savage Leader 👑</span>
-            </div>
-            <div class="stat-box">
-                <span>Verification:</span>
-                <span style="color:#00ff44;">Verified Account ✅</span>
-            </div>
-            <div class="stat-box">
-                <span>Current Balance:</span>
-                <span style="color:#ffaa00;">🪙 500 Coins</span>
+        <div id="inbox-tab" class="hidden">
+            <div class="chat-item" onclick="alert('Opening chat with Zoya...')">
+                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" class="chat-avatar">
+                <div class="chat-info">
+                    <div class="chat-name">Zoya AI <span class="time">2:15 PM</span></div>
+                    <div class="chat-msg">Hey Savage! Aapne reply nahi kiya... ❤️</div>
+                </div>
+                <div class="unread-dot"></div>
             </div>
 
-            <div style="padding: 20px;">
-                <button class="btn-main" onclick="logout()" style="background:transparent; color:#ff0055; border: 1px solid #ff0055;">LOGOUT ACCOUNT</button>
+            <div class="chat-item" onclick="alert('Opening chat with Aliza...')">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500" class="chat-avatar">
+                <div class="chat-info">
+                    <div class="chat-name">Aliza Khan <span class="time">Yesterday</span></div>
+                    <div class="chat-msg">Coins transfer ho gaye hain, thanks!</div>
+                </div>
             </div>
+        </div>
+
+        <div id="profile-tab" class="hidden" style="text-align:center; padding-top:30px;">
+            <div style="width:100px; height:100px; background:#00d4ff; border-radius:50%; margin: 0 auto; line-height:100px; font-size:40px; color:black;">👤</div>
+            <h2 id="p-name" style="margin:15px 0 5px 0;"></h2>
+            <p id="p-email" style="color:#888; font-size:14px;"></p>
+            <div style="background:#1c2229; margin:20px; padding:15px; border-radius:15px; border: 1px solid #333;">
+                <p>Status: <span style="color:#00ff44;">Verified Savage Leader</span></p>
+                <p>Wallet: 🪙 500 Coins</p>
+            </div>
+            <button class="btn-main" onclick="logout()" style="max-width:200px; background:transparent; color:#ff0055; border:1px solid #ff0055;">Logout</button>
         </div>
 
         <div class="bottom-nav">
-            <div class="nav-item active" id="btn-home" onclick="showTab('home')">🏠<br>Home</div>
+            <div class="nav-item active" id="btn-home" onclick="showTab('home')">🌍<br>Explore</div>
+            <div class="nav-item" id="btn-inbox" onclick="showTab('inbox')">💬<br>Inbox</div>
             <div class="nav-item" id="btn-profile" onclick="showTab('profile')">👤<br>Profile</div>
         </div>
     </div>
@@ -101,9 +96,8 @@
         function handleLogin() {
             const name = document.getElementById('username').value;
             const email = document.getElementById('email').value;
-            if(!name || !email) return alert("Please fill all details!");
-            
-            localStorage.setItem('savage_user', JSON.stringify({name: name, email: email}));
+            if(!name || !email) return alert("Details enter karein!");
+            localStorage.setItem('savage_user', JSON.stringify({name, email}));
             location.reload();
         }
 
@@ -113,22 +107,27 @@
                 const data = JSON.parse(user);
                 document.getElementById('login-page').classList.add('hidden');
                 document.getElementById('app-content').classList.remove('hidden');
-                document.getElementById('p-display-name').innerText = data.name;
-                document.getElementById('p-display-email').innerText = data.email;
+                document.getElementById('p-name').innerText = data.name;
+                document.getElementById('p-email').innerText = data.email;
             }
         }
 
         function showTab(tab) {
+            document.getElementById('home-tab').classList.add('hidden');
+            document.getElementById('inbox-tab').classList.add('hidden');
+            document.getElementById('profile-tab').classList.add('hidden');
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
             if(tab === 'home') {
                 document.getElementById('home-tab').classList.remove('hidden');
-                document.getElementById('profile-tab').classList.add('hidden');
                 document.getElementById('btn-home').classList.add('active');
-                document.getElementById('btn-profile').classList.remove('active');
-                document.getElementById('nav-title').innerText = "HOME";
+                document.getElementById('nav-title').innerText = "EXPLORE";
+            } else if(tab === 'inbox') {
+                document.getElementById('inbox-tab').classList.remove('hidden');
+                document.getElementById('btn-inbox').classList.add('active');
+                document.getElementById('nav-title').innerText = "INBOX";
             } else {
-                document.getElementById('home-tab').classList.add('hidden');
                 document.getElementById('profile-tab').classList.remove('hidden');
-                document.getElementById('btn-home').classList.remove('active');
                 document.getElementById('btn-profile').classList.add('active');
                 document.getElementById('nav-title').innerText = "MY PROFILE";
             }
@@ -140,5 +139,5 @@
         }
     </script>
 </body>
-    </html>
-    
+                                                          </html>
+                                                          
