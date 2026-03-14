@@ -3,81 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Savage Chat | Official</title>
+    <title>SavageChat | Official</title>
     <style>
-        body { background: #0b1014; color: white; font-family: 'Arial', sans-serif; margin: 0; padding-bottom: 70px; }
+        body { background: #0b1014; color: white; font-family: sans-serif; margin: 0; padding-bottom: 80px; }
         .hidden { display: none !important; }
         .nav { background: #1c2229; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .btn-main { background: #00d4ff; color: black; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; width: 90%; max-width: 300px; }
-        input, select { width: 85%; max-width: 300px; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #12181f; color: white; }
-        .card { background: #1c2229; border-radius: 15px; margin: 15px; overflow: hidden; border: 1px solid #2a323d; }
-        .card img { width: 100%; height: 280px; object-fit: cover; }
+        .btn-main { background: #00d4ff; color: black; border: none; padding: 12px; border-radius: 25px; font-weight: bold; width: 100%; cursor: pointer; font-size: 14px; }
+        .btn-logout { background: transparent; color: #ff0055; border: 1px solid #ff0055; padding: 5px 15px; border-radius: 15px; cursor: pointer; }
+        input { width: 80%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #12181f; color: white; }
+        
+        /* Profile Cards */
+        .card { background: #1c2229; border-radius: 15px; margin: 15px; overflow: hidden; border: 1px solid #2a323d; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .card img { width: 100%; height: 350px; object-fit: cover; }
         .card-body { padding: 15px; }
-        .online-dot { height: 10px; width: 10px; background-color: #00ff44; border-radius: 50%; display: inline-block; margin-right: 5px; }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1c2229; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
+        .online-tag { background: #00ff44; color: black; font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: bold; text-transform: uppercase; }
+        
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1c2229; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; z-index: 1000; }
     </style>
 </head>
 <body onload="checkLogin()">
 
-    <div id="login-page" style="text-align:center; padding-top:80px;">
-        <h1 style="color:#00d4ff;">SAVAGE CHAT</h1>
-        <p style="color:#888;">Enter Email to Explore</p>
-        <input type="email" id="email" placeholder="Email Address">
-        <input type="text" id="username" placeholder="Full Name">
-        <select id="role">
-            <option value="gifter">I am a Boy (Gifter)</option>
-            <option value="earner">I am a Girl (Earner)</option>
-        </select>
+    <div id="login-page" style="text-align:center; padding-top:100px;">
+        <h1 style="color:#00d4ff; letter-spacing: 2px;">SAVAGE CHAT</h1>
+        <p style="color:#888;">Enter details to start chatting</p>
+        <input type="text" id="username" placeholder="Your Name">
+        <input type="email" id="email" placeholder="Your Email">
         <br><br>
-        <button class="btn-main" onclick="handleLogin()">Login to Dashboard</button>
+        <button class="btn-main" style="max-width:250px;" onclick="handleLogin()">ENTER DASHBOARD</button>
     </div>
 
     <div id="dashboard-page" class="hidden">
         <div class="nav">
-            <span id="display-name" style="font-weight:bold; color:#00d4ff;"></span>
-            <div style="background:#ffaa00; color:black; padding:5px 12px; border-radius:20px; font-size:12px; font-weight:bold;">🪙 0</div>
+            <span id="display-name" style="color:#00d4ff; font-weight:bold; font-size:18px;"></span>
+            <div style="background:#ffaa00; color:black; padding:5px 15px; border-radius:20px; font-weight:bold; font-size:14px;">🪙 500</div>
         </div>
 
-        <div id="home-view">
-            <p style="margin: 15px; color:#aaa; font-size:14px;">🔥 Profiles Online</p>
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500">
-                <div class="card-body">
-                    <span class="online-dot"></span><small>Online</small>
-                    <h3>Zoya AI</h3>
-                    <p style="font-size:12px; color:#ccc;">Let's talk, I'm bored! ❤️</p>
-                    <button class="btn-main" style="width:100%;">FREE CHAT</button>
-                </div>
+        <p style="padding-left:15px; color:#888; font-size:14px; margin-top:20px;">🔥 TRENDING PROFILES</p>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500">
+            <div class="card-body">
+                <span class="online-tag">Online</span>
+                <h2 style="margin:10px 0 5px 0;">Zoya AI</h2>
+                <p style="color:#ccc; font-size:13px; margin-bottom:15px;">Hey Savage! Main aapka intezar kar rahi hoon. Chat shuru karein?</p>
+                <button class="btn-main" onclick="alert('Connecting to Secure Chat...')">START FREE CHAT</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500">
+            <div class="card-body">
+                <span class="online-tag">Online</span>
+                <h2 style="margin:10px 0 5px 0;">Aliza Khan</h2>
+                <p style="color:#ccc; font-size:13px; margin-bottom:15px;">Looking for someone to talk to. Are you the one?</p>
+                <button class="btn-main" onclick="alert('Connecting to Secure Chat...')">START FREE CHAT</button>
             </div>
         </div>
 
         <div class="bottom-nav">
-            <div onclick="location.reload()">🏠 Home</div>
-            <div onclick="alert('Profile Features Coming Soon!')">👤 Profile</div>
-            <div onclick="logout()" style="color:#ff0055;">🚪 Logout</div>
+            <div onclick="location.reload()" style="cursor:pointer;">🏠 Home</div>
+            <div onclick="alert('Profile Settings Coming Soon!')" style="cursor:pointer;">👤 Profile</div>
+            <div onclick="logout()" style="color:#ff0055; cursor:pointer; font-weight:bold;">Logout</div>
         </div>
     </div>
 
     <script>
         function handleLogin() {
-            const email = document.getElementById('email').value;
             const name = document.getElementById('username').value;
-            const role = document.getElementById('role').value;
-            if(!email || !name) return alert("Fill all details!");
-            const user = { name, email, role };
-            localStorage.setItem('savage_user', JSON.stringify(user));
-            showDashboard(user);
+            const email = document.getElementById('email').value;
+            if(!name || !email) return alert("Please fill both name and email!");
+            
+            const userData = { name: name, email: email };
+            localStorage.setItem('savage_user', JSON.stringify(userData));
+            location.reload(); 
         }
 
         function checkLogin() {
-            const saved = localStorage.getItem('savage_user');
-            if(saved) showDashboard(JSON.parse(saved));
-        }
-
-        function showDashboard(user) {
-            document.getElementById('login-page').classList.add('hidden');
-            document.getElementById('dashboard-page').classList.remove('hidden');
-            document.getElementById('display-name').innerText = user.name.toUpperCase();
+            const savedUser = localStorage.getItem('savage_user');
+            if(savedUser) {
+                const user = JSON.parse(savedUser);
+                document.getElementById('login-page').classList.add('hidden');
+                document.getElementById('dashboard-page').classList.remove('hidden');
+                document.getElementById('display-name').innerText = user.name.toUpperCase();
+            }
         }
 
         function logout() {
