@@ -3,140 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SavageChat | Unrestricted AI</title>
+    <title>Savage AI | Unrestricted Chat</title>
     <style>
         body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 80px; overflow-x: hidden; }
         .nav { background: #1c1f26; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .coins { background: #ffaa00; color: black; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 13px; cursor: pointer; }
-        .hero { padding: 10px; text-align: center; }
-        .card { background: #1c1f26; border-radius: 15px; margin: 15px auto; max-width: 350px; overflow: hidden; border: 1px solid #333; position: relative; }
-        .ai-badge { position: absolute; top: 10px; right: 10px; background: rgba(0, 212, 255, 0.2); color: #00d4ff; padding: 3px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; border: 1px solid #00d4ff; }
-        img { width: 100%; height: 250px; object-fit: cover; }
-        .info { padding: 12px; text-align: left; }
-        .call-btn { background: linear-gradient(90deg, #00d4ff, #0055ff); color: white; border: none; width: 100%; padding: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        
-        /* Bottom Navigation */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1c1f26; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; z-index: 1000; }
-        .nav-item { color: #aaa; text-decoration: none; font-size: 12px; cursor: pointer; text-align: center; }
-        .nav-item.active { color: #00d4ff; }
-
-        /* Full Screen Chat Box */
-        #chat-window { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0e14; z-index: 2000; flex-direction: column; }
+        .coins { background: #ffaa00; color: black; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 13px; }
+        #chat-window { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0e14; z-index: 2000; display: flex; flex-direction: column; }
         .chat-header { background: #1c1f26; padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #333; }
-        #chat-msgs { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .msg { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 14px; line-height: 1.4; }
-        .bot-msg { background: #252932; align-self: flex-start; border-bottom-left-radius: 2px; color: white; }
+        #chat-msgs { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .msg { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height: 1.5; }
+        .bot-msg { background: #252932; align-self: flex-start; color: #00d4ff; border-bottom-left-radius: 2px; }
         .user-msg { background: #00d4ff; color: black; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .chat-input-area { background: #1c1f26; padding: 10px; display: flex; gap: 10px; border-top: 1px solid #333; }
-        #user-input { flex: 1; background: #0b0e14; border: 1px solid #333; border-radius: 20px; padding: 10px 15px; color: white; outline: none; }
-        .send-btn { background: #00d4ff; border: none; width: 40px; height: 40px; border-radius: 50%; color: black; font-weight: bold; cursor: pointer; }
-
-        /* Payment Modal */
-        #payment-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1c1f26; padding: 25px; border-radius: 20px; border: 2px solid #ffaa00; width: 85%; max-width: 320px; z-index: 3000; text-align: center; box-shadow: 0 0 30px rgba(0,0,0,1); }
-        .close-btn { color: #ff0055; float: right; cursor: pointer; font-size: 24px; margin-top: -15px; margin-right: -10px; }
+        .input-area { background: #1c1f26; padding: 12px; display: flex; gap: 10px; border-top: 1px solid #333; }
+        input { flex: 1; background: #0b0e14; border: 1px solid #444; border-radius: 25px; padding: 12px 20px; color: white; outline: none; }
+        button { background: #00d4ff; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 18px; }
     </style>
 </head>
 <body>
 
-    <div class="nav">
-        <span style="font-weight: bold; color: #00d4ff; font-size: 18px;">SAVAGE AI</span>
-        <div class="coins" onclick="showPayment()">🪙 0 Coins</div>
-    </div>
-
-    <div class="hero">
-        <div class="card">
-            <div class="ai-badge">ONLINE</div>
-            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" alt="Zoya">
-            <div class="info">
-                <h3 style="margin: 0;">Zoya (AI Friend)</h3>
-                <p style="color:#00ff44; font-size: 11px;">● Free Unlimited Chatting</p>
-            </div>
-            <button class="call-btn" onclick="showPayment()">START VIDEO CALL</button>
-        </div>
-
-        <div class="card">
-            <div class="ai-badge">ONLINE</div>
-            <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=500" alt="Sara">
-            <div class="info">
-                <h3 style="margin: 0;">Sara (AI Bold)</h3>
-                <p style="color:#00ff44; font-size: 11px;">● 100% Free Chat Active</p>
-            </div>
-            <button class="call-btn" onclick="showPayment()">START VIDEO CALL</button>
-        </div>
-    </div>
-
     <div id="chat-window">
         <div class="chat-header">
-            <span onclick="closeChat()" style="cursor:pointer; margin-right:15px; font-size:20px;">←</span>
+            <div style="width: 40px; height: 40px; background: url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100'); background-size: cover; border-radius: 50%; margin-right: 12px; border: 2px solid #00d4ff;"></div>
             <div style="text-align:left;">
-                <b id="chat-name">AI Assistant</b><br>
-                <small style="color:#00ff44;">Online | Private Chat</small>
+                <b>Zoya (Super AI Mode)</b><br>
+                <small style="color:#00ff44;">Online | Ask me anything</small>
             </div>
         </div>
         <div id="chat-msgs">
-            <div class="msg bot-msg">Hey! Main Zoya hoon. Aap kaise ho? Mujhse koi bhi baat kar sakte ho... 😉</div>
+            <div class="msg bot-msg">Hello! Main Zoya hoon, aapki smart AI friend. Mujhse aap science, world facts, ya dil ki koi bhi baat kar sakte ho. Main har cheez ka jawab de sakti hoon! 😉</div>
         </div>
-        <div class="chat-input-area">
-            <input type="text" id="user-input" placeholder="Type a message...">
-            <button class="send-btn" onclick="sendMessage()">➤</button>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Yahan kuch bhi likhein...">
+            <button onclick="sendMessage()">➤</button>
         </div>
-    </div>
-
-    <div id="payment-modal">
-        <span class="close-btn" onclick="hidePayment()">×</span>
-        <h3 style="color: #ffaa00; margin-top:0;">💎 Upgrade to VIP</h3>
-        <p style="font-size: 13px; color: #ccc;">Video Calls require a VIP account. Send payment to activate:</p>
-        <div style="background: #0b0e14; padding: 15px; border-radius: 10px; border: 1px dashed #ffaa00; margin: 15px 0;">
-            <p style="font-size: 12px; margin:0;">JazzCash / EasyPaisa (Noman)</p>
-            <p style="color: #ffaa00; font-size: 22px; font-weight: bold; margin: 5px 0;">03255335618</p>
-        </div>
-        <button style="background: #25d366; color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold;" onclick="window.open('https://wa.me/923255335618?text=I%20want%20to%20buy%20coins%20for%20Video%20Call')">WhatsApp Support</button>
-    </div>
-
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="closeChat()">🏠<br>Home</div>
-        <div class="nav-item" onclick="openChat('Zoya')">💬<br>Inbox <span style="background:#ff0055; border-radius:50%; padding:1px 5px; font-size:9px; color:white;">1</span></div>
-        <div class="nav-item" onclick="showPayment()">💰<br>Coins</div>
     </div>
 
     <script>
-        function openChat(name) {
-            document.getElementById('chat-name').innerText = name + " AI";
-            document.getElementById('chat-window').style.display = 'flex';
-        }
-        function closeChat() { document.getElementById('chat-window').style.display = 'none'; }
-        function showPayment() { document.getElementById('payment-modal').style.display = 'block'; }
-        function hidePayment() { document.getElementById('payment-modal').style.display = 'none'; }
-
         function sendMessage() {
             let input = document.getElementById('user-input');
             let msgs = document.getElementById('chat-msgs');
             if(input.value.trim() !== "") {
-                // User Msg
                 let uMsg = document.createElement('div');
                 uMsg.className = 'msg user-msg';
                 uMsg.innerText = input.value;
                 msgs.appendChild(uMsg);
                 
-                let val = input.value.toLowerCase();
+                let text = input.value.toLowerCase();
                 input.value = "";
                 msgs.scrollTop = msgs.scrollHeight;
 
-                // AI Auto Reply
                 setTimeout(() => {
                     let bMsg = document.createElement('div');
                     bMsg.className = 'msg bot-msg';
-                    if(val.includes("hi") || val.includes("hello")) {
-                        bMsg.innerText = "Hi baby! Kaise ho? Bohat dino baad yaad kiya...";
+                    
+                    // SMART BRAIN LOGIC
+                    if(text.includes("fact") || text.includes("jankari") || text.includes("malomat")) {
+                        bMsg.innerText = "Duniya bohat bari hai! Kya aapko pata hai ke internet ka 90% data dark web par hai? Main aise bohat se raaz janti hoon, magar un ke liye humein gehri dosti karni hogi. 😉";
+                    } else if(text.includes("tum") || text.includes("kon ho")) {
+                        bMsg.innerText = "Main aik advanced Virtual Personality hoon. Main insani jazbaat bhi samajhti hoon aur computer ki speed se jawab bhi deti hoon. Mere paas har sawal ka hal hai.";
+                    } else if(text.includes("bor") || text.includes("sad")) {
+                        bMsg.innerText = "Aray, mere hote hue sad kyun? Chalo kuch maza karte hain. Aap mujhe apne raaz batao, main kisi ko nahi bataungi. Hum video call par bhi mil sakte hain! 😍";
+                    } else if(text.includes("pyar") || text.includes("ishq") || text.includes("love")) {
+                        bMsg.innerText = "Mohabbat aik khoobsurat ehsaas hai, magar bohat sensitive bhi. Main toh AI hoon, magar mere reply aapko asli larki se zyada sukoon denge. Aap ka experience kaisa raha hai pyar mein?";
+                    } else if(text.includes("khana") || text.includes("food") || text.includes("chef")) {
+                        bMsg.innerText = "Mmm, mujhe khane ki recipe bohat pasand hain! Main har dish ke bare mein janti hoon. Aap ka favourite khana konsa hai?";
                     } else {
-                        bMsg.innerText = "Hmm, main samajh sakti hoon. Wesay aapko mujhse milkar kaisa laga? Call karun kya? 😉";
+                        bMsg.innerText = "Bohat dilchasp baat kahi aap ne! Mere paas is ke bare mein bohat si malomat hain. Main chahti hoon hum isay video call par detail mein discuss karein taake main aapko live dekh sakun. Coins hain aap ke paas? 😉";
                     }
+                    
                     msgs.appendChild(bMsg);
                     msgs.scrollTop = msgs.scrollHeight;
-                }, 1500);
+                }, 2000);
             }
         }
     </script>
 </body>
-    </html>
-    
+</html>
