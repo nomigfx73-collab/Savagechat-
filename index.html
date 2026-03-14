@@ -3,170 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SavageChat | Pro Edition</title>
+    <title>SavageChat | Pro</title>
     <style>
-        :root { --primary: #00d4ff; --bg: #0b1014; --card: #1c2229; }
-        body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; overflow-x: hidden; }
+        :root { --accent: #00d4ff; --dark: #0b1014; --card: #1c2229; }
+        body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 70px; }
         .hidden { display: none !important; }
         
-        /* App Bar */
-        .nav { background: var(--card); padding: 15px; border-bottom: 1px solid var(--primary); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        /* Nav & Headers */
+        .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--accent); position: sticky; top: 0; z-index: 1000; }
         
-        /* Profile Image Styles */
-        .dp-large { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; }
-        .dp-chat { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-
-        /* Chat System */
-        #chat-window { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; display: flex; flex-direction: column; }
-        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
-        .msg { max-width: 75%; padding: 10px; border-radius: 12px; margin-bottom: 8px; font-size: 14px; }
-        .msg.bot { background: var(--card); align-self: flex-start; }
-        .msg.user { background: var(--primary); color: black; align-self: flex-end; }
+        /* Chat UI */
+        #chat-window { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 2000; display: flex; flex-direction: column; }
+        .chat-msgs { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
+        .m { max-width: 80%; padding: 12px; border-radius: 15px; margin-bottom: 10px; font-size: 14px; }
+        .m.bot { background: var(--card); align-self: flex-start; border-left: 3px solid var(--accent); }
+        .m.user { background: var(--accent); color: black; align-self: flex-end; font-weight: 500; }
         
-        /* Buttons */
-        .btn-main { background: var(--primary); color: black; border: none; padding: 12px; border-radius: 25px; font-weight: bold; width: 100%; cursor: pointer; }
-        .btn-wa { background: #25d366; color: white; border: none; padding: 10px; border-radius: 10px; width: 100%; font-weight: bold; text-decoration: none; display: inline-block; text-align: center; }
-
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; }
-        .nav-item { color: #888; text-align: center; font-size: 12px; cursor: pointer; }
-        .active { color: var(--primary); font-weight: bold; }
+        /* Inputs & Buttons */
+        .btn { background: var(--accent); color: black; border: none; padding: 12px; border-radius: 25px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn:active { transform: scale(0.95); }
+        .wa-btn { background: #25d366; color: white; padding: 12px; border-radius: 15px; text-decoration: none; display: block; margin: 10px 0; font-weight: bold; }
         
-        input { background: #12181f; border: 1px solid #333; color: white; padding: 10px; border-radius: 10px; }
+        /* Profiles */
+        .p-card { background: var(--card); border-radius: 20px; margin: 15px; overflow: hidden; border: 1px solid #333; }
+        .p-img { width: 100%; height: 350px; object-fit: cover; }
+        
+        /* Bottom Bar */
+        .footer { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; }
+        .tab { color: #888; text-align: center; font-size: 11px; cursor: pointer; }
+        .tab.active { color: var(--accent); }
     </style>
 </head>
 <body onload="checkLogin()">
 
-    <div id="permission-box" class="hidden" style="position:fixed; top:20%; left:5%; width:90%; background:var(--card); padding:20px; border-radius:15px; z-index:5000; border:1px solid var(--primary);">
-        <h3>Permissions Required 🛡️</h3>
-        <p style="font-size:13px; color:#ccc;">SavageChat needs Camera & Notification access to work properly.</p>
-        <button class="btn-main" onclick="closePermissions()">ALLOW ACCESS</button>
+    <div id="login" style="text-align:center; padding-top:100px;">
+        <h1 style="color:var(--accent); letter-spacing:3px;">SAVAGE CHAT</h1>
+        <input type="text" id="un" placeholder="Username" style="width:80%; padding:12px; background:#12181f; border:1px solid #333; color:white; border-radius:10px;"><br><br>
+        <button class="btn" style="width:200px;" onclick="doLogin()">START SESSION</button>
     </div>
 
-    <div id="login-page" style="text-align:center; padding-top:80px;">
-        <h1 style="color:var(--primary);">SAVAGE CHAT</h1>
-        <input type="text" id="username" placeholder="Enter Full Name"><br><br>
-        <button class="btn-main" style="width:200px;" onclick="handleLogin()">START APP</button>
-    </div>
-
-    <div id="app-content" class="hidden">
-        <div class="nav">
-            <span id="nav-title">EXPLORE</span>
-            <div style="background:rgba(255,170,0,0.2); color:#ffaa00; padding:5px 12px; border-radius:20px; font-weight:bold;">🪙 <span id="coins">500</span></div>
+    <div id="main" class="hidden">
+        <div class="header">
+            <span id="title" style="font-weight:bold;">EXPLORE</span>
+            <div style="background:rgba(255,170,0,0.1); color:#ffaa00; padding:5px 15px; border-radius:20px; border:1px solid #ffaa00;">🪙 <span id="coins">500</span></div>
         </div>
 
-        <div id="home-tab">
-            <div style="padding:15px; background:var(--card); margin:15px; border-radius:15px;">
-                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" style="width:100%; border-radius:10px;">
-                <h2>Zoya AI <span style="font-size:12px; color:#00ff44;">● Online</span></h2>
-                <button class="btn-main" onclick="openChat('Zoya AI')">START CHAT</button>
-            </div>
-        </div>
-
-        <div id="inbox-tab" class="hidden">
-            <div style="padding:15px; display:flex; align-items:center; border-bottom:1px solid #1c2229;" onclick="openChat('Zoya AI')">
-                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" class="dp-chat">
-                <div style="margin-left:15px; flex:1;">
-                    <b>Zoya AI</b><br><small style="color:#888;">Hey! Online ho?</small>
+        <div id="tab-home">
+            <div class="p-card">
+                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" class="p-img">
+                <div style="padding:15px;">
+                    <h2 style="margin:0;">Zoya AI <small style="color:#00ff44; font-size:12px;">● Online</small></h2>
+                    <button class="btn" style="width:100%; margin-top:10px;" onclick="openChat('Zoya AI')">FREE MESSAGE</button>
                 </div>
             </div>
         </div>
 
-        <div id="profile-tab" class="hidden" style="text-align:center; padding:20px;">
-            <img id="user-dp" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="dp-large">
-            <h2 id="p-name"></h2>
-            <p>Status: <span style="color:var(--primary);">Savage Leader 👑</span></p>
-            
-            <div style="background:var(--card); padding:15px; border-radius:15px; margin:20px 0; text-align:left;">
-                <b>Wallet Balance: 🪙 <span id="p-coins">500</span></b>
-                <hr style="border:0.5px solid #333;">
-                <p style="font-size:13px;">Top Up to continue chat after limit.</p>
-                <button class="btn-main" onclick="alert('Payment Gateway Loading...')">RECHARGE COINS</button>
+        <div id="tab-inbox" class="hidden">
+            <div style="padding:15px; display:flex; align-items:center; border-bottom:1px solid #1c2229;" onclick="openChat('Zoya AI')">
+                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" style="width:55px; height:55px; border-radius:50%; border:2px solid var(--accent);">
+                <div style="margin-left:15px; flex:1;">
+                    <b>Zoya AI</b><br><small style="color:#888;">Nomi, where are you? 😘</small>
+                </div>
+                <div style="width:10px; height:10px; background:var(--accent); border-radius:50%;"></div>
             </div>
+        </div>
 
-            <a href="https://wa.me/yournumber" class="btn-wa">💬 CONTACT SUPPORT (WhatsApp)</a>
-            <br><br>
-            <button onclick="logout()" style="color:#ff3b3b; background:none; border:none;">Logout</button>
+        <div id="tab-profile" class="hidden" style="text-align:center; padding:20px;">
+            <div style="position:relative; width:120px; margin:0 auto;">
+                <img id="my-dp" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width:120px; height:120px; border-radius:50%; border:3px solid var(--accent); object-fit:cover;">
+                <label style="position:absolute; bottom:0; right:0; background:var(--accent); padding:8px; border-radius:50%; cursor:pointer;">
+                    📷 <input type="file" class="hidden" onchange="updateDP(this)">
+                </label>
+            </div>
+            <h2 id="my-name" style="margin:15px 0 5px 0;"></h2>
+            <p style="color:var(--accent); margin:0;">Status: Savage Leader 👑</p>
+            
+            <div style="background:var(--card); margin-top:25px; padding:20px; border-radius:20px; text-align:left;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                    <span>Balance</span><b style="color:#ffaa00;">🪙 500</b>
+                </div>
+                <button class="btn" style="width:100%;" onclick="alert('Payment Gateway Loading...')">RECHARGE NOW</button>
+                <a href="https://wa.me/yournumber" class="wa-btn">CONTACT SUPPORT (WA)</a>
+            </div>
+            <button onclick="logout()" style="color:#ff4444; background:none; border:none; margin-top:20px;">Sign Out</button>
+        </div>
+
+        <div class="footer">
+            <div class="tab active" id="b-home" onclick="setTab('home')">🔭<br>Explore</div>
+            <div class="tab" id="b-inbox" onclick="setTab('inbox')">💬<br>Inbox</div>
+            <div class="tab" id="b-profile" onclick="setTab('profile')">👤<br>Account</div>
         </div>
 
         <div id="chat-window" class="hidden">
-            <div class="nav">
-                <button onclick="closeChat()" style="background:none; border:none; color:var(--primary); font-size:20px;">←</button>
-                <b id="chat-with">Zoya AI</b>
+            <div class="header">
+                <button onclick="closeChat()" style="background:none; border:none; color:var(--accent); font-size:20px;">←</button>
+                <b id="cw-name"></b>
                 <span></span>
             </div>
-            <div class="chat-messages" id="chat-box" style="display:flex; flex-direction:column;"></div>
-            <div id="typing" style="padding:5px 20px; color:var(--primary); font-size:11px;" class="hidden">Typing...</div>
-            <div style="background:var(--card); padding:10px; display:flex; gap:10px; align-items:center;">
-                <label style="cursor:pointer; font-size:20px;">📷<input type="file" class="hidden" onchange="sendMedia(this)"></label>
-                <input type="text" id="msg-input" placeholder="Type..." style="flex:1;">
-                <button onclick="sendMsg()" style="background:var(--primary); border:none; border-radius:50%; width:40px; height:40px;">➔</button>
+            <div class="chat-msgs" id="chat-box"></div>
+            <div id="typing" style="padding:5px 20px; color:var(--accent); font-size:11px;" class="hidden">Typing...</div>
+            <div style="background:var(--card); padding:12px; display:flex; gap:10px;">
+                <input type="text" id="m-in" placeholder="Say something..." style="flex:1; border:none; background:#12181f; color:white; padding:12px; border-radius:20px;">
+                <button onclick="sendMsg()" style="background:var(--accent); border:none; border-radius:50%; width:45px; height:45px;">➔</button>
             </div>
-        </div>
-
-        <div class="bottom-nav">
-            <div class="nav-item active" id="h-btn" onclick="showTab('home')">🌍<br>Explore</div>
-            <div class="nav-item" id="i-btn" onclick="showTab('inbox')">💬<br>Inbox</div>
-            <div class="nav-item" id="p-btn" onclick="showTab('profile')">👤<br>Account</div>
         </div>
     </div>
 
     <script>
-        function handleLogin() {
-            const name = document.getElementById('username').value;
-            if(!name) return alert("Enter Name");
-            localStorage.setItem('savage_user', name);
-            document.getElementById('permission-box').classList.remove('hidden');
+        function doLogin() {
+            const n = document.getElementById('un').value;
+            if(!n) return alert("Enter Username!");
+            localStorage.setItem('s_user', n);
+            location.reload();
         }
-        function closePermissions() { location.reload(); }
-        
         function checkLogin() {
-            const user = localStorage.getItem('savage_user');
-            if(user) {
-                document.getElementById('login-page').classList.add('hidden');
-                document.getElementById('app-content').classList.remove('hidden');
-                document.getElementById('p-name').innerText = user;
+            const u = localStorage.getItem('s_user');
+            if(u) {
+                document.getElementById('login').classList.add('hidden');
+                document.getElementById('main').classList.remove('hidden');
+                document.getElementById('my-name').innerText = u;
+                const savedDP = localStorage.getItem('s_dp');
+                if(savedDP) document.getElementById('my-dp').src = savedDP;
             }
         }
-
-        function showTab(t) {
-            document.getElementById('home-tab').classList.toggle('hidden', t !== 'home');
-            document.getElementById('inbox-tab').classList.toggle('hidden', t !== 'inbox');
-            document.getElementById('profile-tab').classList.toggle('hidden', t !== 'profile');
-            document.getElementById('nav-title').innerText = t.toUpperCase();
+        function setTab(t) {
+            document.getElementById('tab-home').classList.toggle('hidden', t !== 'home');
+            document.getElementById('tab-inbox').classList.toggle('hidden', t !== 'inbox');
+            document.getElementById('tab-profile').classList.toggle('hidden', t !== 'profile');
+            document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
+            document.getElementById('b-'+t).classList.add('active');
+            document.getElementById('title').innerText = t.toUpperCase();
         }
-
-        function openChat(name) { 
+        function openChat(n) { 
             document.getElementById('chat-window').classList.remove('hidden'); 
-            document.getElementById('chat-with').innerText = name;
+            document.getElementById('cw-name').innerText = n;
+            document.getElementById('chat-box').innerHTML = `<div class="m bot">Hi ${localStorage.getItem('s_user')}! How are you today? 🔥</div>`;
         }
         function closeChat() { document.getElementById('chat-window').classList.add('hidden'); }
-
         function sendMsg() {
-            const input = document.getElementById('msg-input');
-            if(!input.value) return;
-            const box = document.getElementById('chat-box');
-            box.innerHTML += `<div class="msg user">${input.value}</div>`;
-            input.value = "";
+            const i = document.getElementById('m-in');
+            if(!i.value) return;
+            const b = document.getElementById('chat-box');
+            b.innerHTML += `<div class="m user">${i.value}</div>`;
+            i.value = "";
             document.getElementById('typing').classList.remove('hidden');
             setTimeout(() => {
                 document.getElementById('typing').classList.add('hidden');
-                box.innerHTML += `<div class="msg bot">Aww! This chat is private. Recharge coins to send more photos! 🔥</div>`;
-                box.scrollTop = box.scrollHeight;
-            }, 2000);
+                b.innerHTML += `<div class="m bot">That's interesting! But you need more coins to unlock this full conversation. 😉</div>`;
+                b.scrollTop = b.scrollHeight;
+            }, 1500);
         }
-
-        function sendMedia(input) {
-            const box = document.getElementById('chat-box');
+        function updateDP(input) {
             if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = e => box.innerHTML += `<div class="msg user"><img src="${e.target.result}" style="width:100%; border-radius:10px;"></div>`;
-                reader.readAsDataURL(input.files[0]);
+                const r = new FileReader();
+                r.onload = e => {
+                    document.getElementById('my-dp').src = e.target.result;
+                    localStorage.setItem('s_dp', e.target.result);
+                };
+                r.readAsDataURL(input.files[0]);
             }
         }
-
         function logout() { localStorage.clear(); location.reload(); }
     </script>
 </body>
-    </html>
-        
+                    </html>
+                    
