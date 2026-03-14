@@ -3,36 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Savage App | Commercial v34</title>
+    <title>Savage App | Official v35</title>
     <style>
         :root { --accent: #00d4ff; --dark: #0b1014; --card: #1c2229; --gold: #ffaa00; --green: #25d366; }
         body { background: var(--dark); color: white; font-family: sans-serif; margin: 0; padding-bottom: 75px; overflow-x: hidden; }
         .hidden { display: none !important; }
         
-        /* 12, 13: Remember Account & Header */
+        /* Headers & UI */
         .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--accent); position: sticky; top: 0; z-index: 1000; }
         .coins-badge { background: rgba(255,170,0,0.1); color: var(--gold); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--gold); font-weight: bold; cursor: pointer; }
-
-        /* Sale Banner */
         .sale-banner { background: linear-gradient(90deg, #ff0055, #ffaa00); color: white; padding: 10px; text-align: center; font-size: 11px; font-weight: bold; letter-spacing: 1px; }
 
-        /* 3: Live Stream Box */
+        /* Home Content */
         .live-scroll { display: flex; overflow-x: auto; padding: 10px; gap: 10px; background: #0e141a; }
         .live-u { min-width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ff0055; padding: 2px; position: relative; }
         .live-u img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
         .tag { position: absolute; bottom: -5px; left: 15%; background: #ff0055; font-size: 8px; padding: 2px 6px; border-radius: 10px; }
 
-        /* 2, 10: Post Box & Like/Comment */
         .post { background: var(--card); border-radius: 15px; margin: 15px; border: 1px solid #333; overflow: hidden; }
         .post-img { width: 100%; height: auto; display: block; }
         .post-acts { padding: 12px; display: flex; gap: 20px; border-top: 1px solid #2a323d; }
         .act-btn { background: none; border: none; color: #888; font-size: 14px; cursor: pointer; }
 
-        /* 4, 5, 8, 14: Service Grid */
+        /* Service Grid */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
         .card { background: var(--card); padding: 25px 10px; border-radius: 15px; text-align: center; border: 1px solid #333; cursor: pointer; }
 
-        /* 1, 7, 9: Chat System */
+        /* Chat Logic */
         .win { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 2000; display: flex; flex-direction: column; }
         .msgs { flex: 1; padding: 15px; overflow-y: auto; background: #0b1014; display: flex; flex-direction: column; }
         .msg { max-width: 75%; padding: 10px; border-radius: 12px; margin-bottom: 10px; font-size: 14px; }
@@ -48,15 +45,15 @@
 <body onload="init()">
 
     <div id="login-screen" style="text-align:center; padding: 100px 20px;">
-        <h1 style="color:var(--accent);">SAVAGE LOGIN</h1>
+        <h1 style="color:var(--accent);">SAVAGE PRO</h1>
         <input type="text" id="uname" placeholder="Enter Name" style="width:85%; padding:15px; background:var(--card); border:1px solid #333; color:white; border-radius:12px;"><br><br>
-        <button onclick="login()" style="width:85%; padding:15px; background:var(--accent); border:none; border-radius:30px; font-weight:bold;">START</button>
+        <button onclick="login()" style="width:85%; padding:15px; background:var(--accent); border:none; border-radius:30px; font-weight:bold;">GET STARTED</button>
     </div>
 
     <div id="app" class="hidden">
         <div class="sale-banner">🔥 SALE: $1 = 1,000 COINS | V-CALL: 1k / MIN</div>
         <div class="header">
-            <b id="tab-name">SAVAGE HOME</b>
+            <b id="tab-name">HOME</b>
             <div class="coins-badge" onclick="nav('service')">🪙 <span id="c-ui">1000</span></div>
         </div>
 
@@ -66,11 +63,11 @@
                 <div class="live-u" onclick="vcall('Sara')"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100"><span class="tag">LIVE</span></div>
             </div>
             <div class="post">
-                <div style="padding:10px;"><b>Official AI</b> <small style="color:var(--accent);">● Post</small></div>
+                <div style="padding:10px;"><b>Savage Agent</b> <small style="color:var(--accent);">● Online</small></div>
                 <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600" class="post-img">
                 <div class="post-acts">
                     <button class="act-btn" onclick="this.style.color='var(--accent)'">👍 Like</button>
-                    <button class="act-btn" onclick="openChat('Zoya AI')">💬 Comment</button>
+                    <button class="act-btn" onclick="openChat('Savage Agent')">💬 Comment</button>
                 </div>
             </div>
         </div>
@@ -78,28 +75,23 @@
         <div id="t-service" class="hidden">
             <div class="grid">
                 <div class="card" onclick="vcall('Random')">📹<br>Paid V-Call<br><small style="color:var(--gold);">1k / min</small></div>
-                <div class="card" onclick="window.open('https://wa.me/923000000000','_blank')">💬<br>WhatsApp</div>
+                <div class="card" onclick="window.open('https://wa.me/923255335618','_blank')">💬<br>WhatsApp</div>
                 <div class="card" onclick="topup()">💰<br>Buy Coins<br><small style="color:var(--gold);">$1 = 1k</small></div>
                 <div class="card" onclick="alert('Downloading APK...')">📥<br>Get APK</div>
             </div>
         </div>
 
         <div id="t-inbox" class="hidden">
-            <div style="padding:15px; border-bottom:1px solid #333;" onclick="openChat('Zoya AI')">
-                <b>Zoya AI (Human Agent)</b><br><small style="color:#888;">Nomi, recharge coins for call!</small>
+            <div style="padding:15px; border-bottom:1px solid #333;" onclick="openChat('Savage Agent')">
+                <b>Savage Agent</b><br><small style="color:#888;">Nomi, call me for private chat! ❤️</small>
             </div>
         </div>
 
         <div id="t-account" class="hidden" style="text-align:center; padding:30px;">
-            <div style="position:relative; width:100px; margin:0 auto;">
-                <img id="my-dp" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width:100px; height:100px; border-radius:50%; border:2px solid var(--accent); object-fit:cover;">
-                <label style="position:absolute; bottom:0; right:0; background:var(--accent); padding:5px; border-radius:50%; cursor:pointer;">
-                    📷<input type="file" class="hidden" onchange="upload(this)">
-                </label>
-            </div>
+            <img id="my-dp" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width:100px; height:100px; border-radius:50%; border:2px solid var(--accent); object-fit:cover;">
             <h2 id="my-name"></h2>
             <p style="color:var(--accent);">Savage Leader 👑</p>
-            <button onclick="logout()" style="margin-top:40px; color:#ff4444; background:none; border:none;">Logout</button>
+            <button onclick="logout()" style="margin-top:40px; color:#ff4444; background:none; border:none;">Log Out</button>
         </div>
 
         <div id="chat-win" class="win hidden">
@@ -124,8 +116,8 @@
     </div>
 
     <script>
-        // --- 4, 5: PAYMENT CONFIG ---
-        const MY_JAZZCASH = "0300-XXXXXXX"; // <--- APNA NUMBER YAHAN LIKHEIN
+        // --- YOUR ACTUAL NUMBER ---
+        const MY_PHONE = "923255335618"; 
         let coins = parseInt(localStorage.getItem('s_coins')) || 1000;
 
         function init() {
@@ -134,8 +126,6 @@
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('app').classList.remove('hidden');
                 document.getElementById('my-name').innerText = u;
-                const dp = localStorage.getItem('s_dp');
-                if(dp) document.getElementById('my-dp').src = dp;
                 updateU();
             }
         }
@@ -157,13 +147,10 @@
             document.getElementById('t-'+t).classList.remove('hidden');
             document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
             document.getElementById('b-'+t.substring(0,4)).classList.add('active');
-            document.getElementById('tab-name').innerText = "SAVAGE " + t.toUpperCase();
+            document.getElementById('tab-name').innerText = t.toUpperCase();
         }
 
-        function openChat(n) {
-            document.getElementById('chat-win').classList.remove('hidden');
-            document.getElementById('c-title').innerText = n;
-        }
+        function openChat(n) { document.getElementById('chat-win').classList.remove('hidden'); document.getElementById('c-title').innerText = n; }
         function closeChat() { document.getElementById('chat-win').classList.add('hidden'); }
 
         function sendMsg() {
@@ -172,30 +159,22 @@
             const b = document.getElementById('m-box');
             b.innerHTML += `<div class="msg u">${i.value}</div>`;
             i.value = "";
-            setTimeout(() => { b.innerHTML += `<div class="msg b">Call me for 1 minute in just 1000 coins! ❤️</div>`; b.scrollTop = b.scrollHeight; }, 1000);
+            setTimeout(() => { b.innerHTML += `<div class="msg b">Video call me now for 1000 coins! ❤️</div>`; b.scrollTop = b.scrollHeight; }, 1000);
         }
 
-        // 8: PAID V-CALL LOGIC (1k COINS = 1 MIN)
         function vcall(name) {
-            if(coins < 1000) return alert("Low Balance! $1 (1000 coins) required.");
-            const ok = confirm("Call " + name + " for 1 minute?");
-            if(ok) { coins -= 1000; updateU(); alert("Connecting..."); }
-        }
-
-        // 5: TOPUP GATEWAY
-        function topup() {
-            const usd = prompt("Enter Dollars ($1 = 1000 coins):", "1");
-            if(usd && !isNaN(usd)) {
-                const pkr = usd * 280; // Estimated rate
-                alert("PLEASE PAY Rs."+pkr+" to JAZZCASH: " + MY_JAZZCASH + "\n\nSend screenshot to WhatsApp for coins.");
+            if(coins < 1000) return alert("Low Balance! Recharge $1 for 1 minute.");
+            if(confirm("Start 1 minute Video Call with " + name + "?")) {
+                coins -= 1000; updateU(); alert("Connecting to Private Server...");
             }
         }
 
-        function upload(input) {
-            if (input.files && input.files[0]) {
-                const r = new FileReader();
-                r.onload = e => { document.getElementById('my-dp').src = e.target.result; localStorage.setItem('s_dp', e.target.result); };
-                r.readAsDataURL(input.files[0]);
+        function topup() {
+            const usd = prompt("Enter USD ($1 = 1000 coins):", "1");
+            if(usd && !isNaN(usd)) {
+                const pkr = usd * 280;
+                alert("PAY Rs." + pkr + " TO JAZZCASH/EASYPAISA:\n" + MY_PHONE + "\n\nSend screenshot on WhatsApp for coins.");
+                window.open('https://wa.me/' + MY_PHONE, '_blank');
             }
         }
 
