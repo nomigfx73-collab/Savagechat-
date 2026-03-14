@@ -3,168 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SavageChat | Pro</title>
+    <title>SavageChat | Elite</title>
     <style>
         :root { --accent: #00d4ff; --dark: #0b1014; --card: #1c2229; }
-        body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 70px; }
+        body { background: var(--dark); color: white; font-family: sans-serif; margin: 0; overflow: hidden; }
         .hidden { display: none !important; }
         
-        /* Nav & Headers */
+        /* App Layout */
         .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--accent); position: sticky; top: 0; z-index: 1000; }
-        
-        /* Chat UI */
+        .coins-display { background: rgba(255,170,0,0.1); color: #ffaa00; padding: 5px 12px; border-radius: 20px; border: 1px solid #ffaa00; font-weight: bold; }
+
+        /* Chat Window */
         #chat-window { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 2000; display: flex; flex-direction: column; }
-        .chat-msgs { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
-        .m { max-width: 80%; padding: 12px; border-radius: 15px; margin-bottom: 10px; font-size: 14px; }
-        .m.bot { background: var(--card); align-self: flex-start; border-left: 3px solid var(--accent); }
-        .m.user { background: var(--accent); color: black; align-self: flex-end; font-weight: 500; }
-        
-        /* Inputs & Buttons */
-        .btn { background: var(--accent); color: black; border: none; padding: 12px; border-radius: 25px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn:active { transform: scale(0.95); }
-        .wa-btn { background: #25d366; color: white; padding: 12px; border-radius: 15px; text-decoration: none; display: block; margin: 10px 0; font-weight: bold; }
-        
-        /* Profiles */
-        .p-card { background: var(--card); border-radius: 20px; margin: 15px; overflow: hidden; border: 1px solid #333; }
-        .p-img { width: 100%; height: 350px; object-fit: cover; }
-        
-        /* Bottom Bar */
+        .chat-msgs { flex: 1; padding: 15px; overflow-y: auto; background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); display: flex; flex-direction: column; }
+        .m { max-width: 75%; padding: 10px 14px; border-radius: 18px; margin-bottom: 10px; font-size: 14px; position: relative; }
+        .m.bot { background: var(--card); align-self: flex-start; border-bottom-left-radius: 2px; }
+        .m.user { background: var(--accent); color: black; align-self: flex-end; border-bottom-right-radius: 2px; font-weight: 500; }
+
+        /* Voice Note Style */
+        .voice-btn { background: #333; color: var(--accent); border: none; padding: 5px 10px; border-radius: 10px; font-size: 12px; cursor: pointer; margin-top: 5px; }
+
+        /* Footer Nav */
         .footer { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; }
         .tab { color: #888; text-align: center; font-size: 11px; cursor: pointer; }
         .tab.active { color: var(--accent); }
+
+        .btn-send { background: var(--accent); border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; }
+        input { background: #12181f; border: none; color: white; padding: 12px; border-radius: 25px; flex: 1; }
     </style>
 </head>
-<body onload="checkLogin()">
+<body onload="initApp()">
 
-    <div id="login" style="text-align:center; padding-top:100px;">
-        <h1 style="color:var(--accent); letter-spacing:3px;">SAVAGE CHAT</h1>
-        <input type="text" id="un" placeholder="Username" style="width:80%; padding:12px; background:#12181f; border:1px solid #333; color:white; border-radius:10px;"><br><br>
-        <button class="btn" style="width:200px;" onclick="doLogin()">START SESSION</button>
-    </div>
-
-    <div id="main" class="hidden">
+    <div id="main-app">
         <div class="header">
-            <span id="title" style="font-weight:bold;">EXPLORE</span>
-            <div style="background:rgba(255,170,0,0.1); color:#ffaa00; padding:5px 15px; border-radius:20px; border:1px solid #ffaa00;">🪙 <span id="coins">500</span></div>
+            <span id="tab-title" style="font-weight:bold; letter-spacing:1px;">EXPLORE</span>
+            <div class="coins-display">🪙 <span id="user-coins">500</span></div>
         </div>
 
-        <div id="tab-home">
-            <div class="p-card">
-                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" class="p-img">
-                <div style="padding:15px;">
-                    <h2 style="margin:0;">Zoya AI <small style="color:#00ff44; font-size:12px;">● Online</small></h2>
-                    <button class="btn" style="width:100%; margin-top:10px;" onclick="openChat('Zoya AI')">FREE MESSAGE</button>
-                </div>
+        <div id="home-tab">
+            <div style="padding:15px; background:var(--card); margin:15px; border-radius:20px; text-align:center; border: 1px solid #333;">
+                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" style="width:100%; border-radius:15px; height:300px; object-fit:cover;">
+                <h2 style="margin:10px 0;">Zoya AI <small style="color:#00ff44; font-size:12px;">● Online</small></h2>
+                <button onclick="openChat('Zoya AI')" style="width:100%; padding:12px; border-radius:25px; background:var(--accent); border:none; font-weight:bold;">START FREE CHAT</button>
             </div>
         </div>
 
-        <div id="tab-inbox" class="hidden">
-            <div style="padding:15px; display:flex; align-items:center; border-bottom:1px solid #1c2229;" onclick="openChat('Zoya AI')">
-                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" style="width:55px; height:55px; border-radius:50%; border:2px solid var(--accent);">
-                <div style="margin-left:15px; flex:1;">
-                    <b>Zoya AI</b><br><small style="color:#888;">Nomi, where are you? 😘</small>
-                </div>
-                <div style="width:10px; height:10px; background:var(--accent); border-radius:50%;"></div>
+        <div id="profile-tab" class="hidden" style="text-align:center; padding:30px;">
+            <div style="width:100px; height:100px; background:var(--accent); border-radius:50%; margin:0 auto; line-height:100px; font-size:40px; color:black;">👤</div>
+            <h2 id="display-name" style="margin-top:15px;"></h2>
+            <p style="color:var(--accent);">Savage Leader 👑</p>
+            <div style="background:var(--card); padding:20px; border-radius:15px; margin-top:20px; text-align:left;">
+                <p>Wallet Balance: <span style="float:right; color:#ffaa00;">🪙 <span id="p-coins">500</span></span></p>
+                <button onclick="alert('Redirecting to Payment...')" style="width:100%; background:none; border:1px solid var(--accent); color:var(--accent); padding:10px; border-radius:10px; margin-top:10px;">TOP UP COINS</button>
             </div>
-        </div>
-
-        <div id="tab-profile" class="hidden" style="text-align:center; padding:20px;">
-            <div style="position:relative; width:120px; margin:0 auto;">
-                <img id="my-dp" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width:120px; height:120px; border-radius:50%; border:3px solid var(--accent); object-fit:cover;">
-                <label style="position:absolute; bottom:0; right:0; background:var(--accent); padding:8px; border-radius:50%; cursor:pointer;">
-                    📷 <input type="file" class="hidden" onchange="updateDP(this)">
-                </label>
-            </div>
-            <h2 id="my-name" style="margin:15px 0 5px 0;"></h2>
-            <p style="color:var(--accent); margin:0;">Status: Savage Leader 👑</p>
-            
-            <div style="background:var(--card); margin-top:25px; padding:20px; border-radius:20px; text-align:left;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                    <span>Balance</span><b style="color:#ffaa00;">🪙 500</b>
-                </div>
-                <button class="btn" style="width:100%;" onclick="alert('Payment Gateway Loading...')">RECHARGE NOW</button>
-                <a href="https://wa.me/yournumber" class="wa-btn">CONTACT SUPPORT (WA)</a>
-            </div>
-            <button onclick="logout()" style="color:#ff4444; background:none; border:none; margin-top:20px;">Sign Out</button>
-        </div>
-
-        <div class="footer">
-            <div class="tab active" id="b-home" onclick="setTab('home')">🔭<br>Explore</div>
-            <div class="tab" id="b-inbox" onclick="setTab('inbox')">💬<br>Inbox</div>
-            <div class="tab" id="b-profile" onclick="setTab('profile')">👤<br>Account</div>
         </div>
 
         <div id="chat-window" class="hidden">
             <div class="header">
                 <button onclick="closeChat()" style="background:none; border:none; color:var(--accent); font-size:20px;">←</button>
-                <b id="cw-name"></b>
-                <span></span>
+                <b id="cw-name">Zoya AI</b>
+                <span style="font-size:10px; color:#00ff44;">● Active</span>
             </div>
             <div class="chat-msgs" id="chat-box"></div>
-            <div id="typing" style="padding:5px 20px; color:var(--accent); font-size:11px;" class="hidden">Typing...</div>
-            <div style="background:var(--card); padding:12px; display:flex; gap:10px;">
-                <input type="text" id="m-in" placeholder="Say something..." style="flex:1; border:none; background:#12181f; color:white; padding:12px; border-radius:20px;">
-                <button onclick="sendMsg()" style="background:var(--accent); border:none; border-radius:50%; width:45px; height:45px;">➔</button>
+            <div id="typing" style="padding:5px 20px; color:var(--accent); font-size:11px;" class="hidden">Zoya is typing...</div>
+            <div style="background:var(--card); padding:10px; display:flex; gap:10px; align-items:center;">
+                <input type="text" id="m-input" placeholder="Type a message...">
+                <button class="btn-send" onclick="sendMsg()">➔</button>
             </div>
+        </div>
+
+        <div class="footer">
+            <div class="tab active" id="b-home" onclick="switchTab('home')">🔭<br>Explore</div>
+            <div class="tab" id="b-profile" onclick="switchTab('profile')">👤<br>Account</div>
         </div>
     </div>
 
     <script>
-        function doLogin() {
-            const n = document.getElementById('un').value;
-            if(!n) return alert("Enter Username!");
-            localStorage.setItem('s_user', n);
-            location.reload();
+        let coins = parseInt(localStorage.getItem('s_coins')) || 500;
+        
+        function initApp() {
+            const user = localStorage.getItem('s_user') || "Savage User";
+            document.getElementById('display-name').innerText = user;
+            updateCoinUI();
         }
-        function checkLogin() {
-            const u = localStorage.getItem('s_user');
-            if(u) {
-                document.getElementById('login').classList.add('hidden');
-                document.getElementById('main').classList.remove('hidden');
-                document.getElementById('my-name').innerText = u;
-                const savedDP = localStorage.getItem('s_dp');
-                if(savedDP) document.getElementById('my-dp').src = savedDP;
+
+        function updateCoinUI() {
+            document.getElementById('user-coins').innerText = coins;
+            document.getElementById('p-coins').innerText = coins;
+            localStorage.setItem('s_coins', coins);
+        }
+
+        function switchTab(t) {
+            document.getElementById('home-tab').classList.toggle('hidden', t !== 'home');
+            document.getElementById('profile-tab').classList.toggle('hidden', t !== 'profile');
+            document.getElementById('tab-title').innerText = t.toUpperCase();
+        }
+
+        function openChat(name) {
+            document.getElementById('chat-window').classList.remove('hidden');
+            const box = document.getElementById('chat-box');
+            if(box.innerHTML === "") {
+                box.innerHTML = `<div class="m bot">Hi dear! I was waiting for you. ❤️<br><button class="voice-btn" onclick="playVoice()">▶ Listen Voice</button></div>`;
             }
         }
-        function setTab(t) {
-            document.getElementById('tab-home').classList.toggle('hidden', t !== 'home');
-            document.getElementById('tab-inbox').classList.toggle('hidden', t !== 'inbox');
-            document.getElementById('tab-profile').classList.toggle('hidden', t !== 'profile');
-            document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
-            document.getElementById('b-'+t).classList.add('active');
-            document.getElementById('title').innerText = t.toUpperCase();
-        }
-        function openChat(n) { 
-            document.getElementById('chat-window').classList.remove('hidden'); 
-            document.getElementById('cw-name').innerText = n;
-            document.getElementById('chat-box').innerHTML = `<div class="m bot">Hi ${localStorage.getItem('s_user')}! How are you today? 🔥</div>`;
-        }
+
         function closeChat() { document.getElementById('chat-window').classList.add('hidden'); }
+
         function sendMsg() {
-            const i = document.getElementById('m-in');
-            if(!i.value) return;
-            const b = document.getElementById('chat-box');
-            b.innerHTML += `<div class="m user">${i.value}</div>`;
-            i.value = "";
+            const input = document.getElementById('m-input');
+            if(!input.value) return;
+            if(coins < 10) return alert("Insufficient Coins! Please Recharge.");
+
+            const box = document.getElementById('chat-box');
+            box.innerHTML += `<div class="m user">${input.value}</div>`;
+            
+            // Coin Deduction Logic
+            coins -= 10;
+            updateCoinUI();
+            
+            input.value = "";
+            box.scrollTop = box.scrollHeight;
+
+            // AI Reply Logic
             document.getElementById('typing').classList.remove('hidden');
             setTimeout(() => {
                 document.getElementById('typing').classList.add('hidden');
-                b.innerHTML += `<div class="m bot">That's interesting! But you need more coins to unlock this full conversation. 😉</div>`;
-                b.scrollTop = b.scrollHeight;
-            }, 1500);
+                box.innerHTML += `<div class="m bot">Aww, you're so sweet! But to see my private photos, you need 1000 coins. Want to see? 🔥</div>`;
+                box.scrollTop = box.scrollHeight;
+            }, 2000);
         }
-        function updateDP(input) {
-            if (input.files && input.files[0]) {
-                const r = new FileReader();
-                r.onload = e => {
-                    document.getElementById('my-dp').src = e.target.result;
-                    localStorage.setItem('s_dp', e.target.result);
-                };
-                r.readAsDataURL(input.files[0]);
-            }
+
+        function playVoice() {
+            alert("Voice Note: 'Hey Savage! How are you? I'm feeling bored, let's talk!'");
         }
-        function logout() { localStorage.clear(); location.reload(); }
     </script>
 </body>
-                    </html>
-                    
+</html>
