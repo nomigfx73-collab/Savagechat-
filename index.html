@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SavageChat | AI Unrestricted</title>
+    <title>SavageChat | Free AI Chat</title>
     <style>
         body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 80px; text-align: center; }
         .nav { background: #1c1f26; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
@@ -13,83 +13,93 @@
         .ai-badge { position: absolute; top: 10px; right: 10px; background: rgba(0, 212, 255, 0.2); color: #00d4ff; padding: 3px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; border: 1px solid #00d4ff; }
         img { width: 100%; height: 250px; object-fit: cover; }
         .info { padding: 12px; text-align: left; }
-        .price { color: #00d4ff; font-weight: bold; font-size: 14px; }
         .call-btn { background: linear-gradient(90deg, #00d4ff, #0055ff); color: white; border: none; width: 100%; padding: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
         
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1c1f26; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; z-index: 1000; }
         .nav-item { color: #aaa; text-decoration: none; font-size: 12px; cursor: pointer; text-align: center; }
         .nav-item.active { color: #00d4ff; }
 
-        #payment-modal, #inbox-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1c1f26; padding: 20px; border-radius: 15px; border: 2px solid #00d4ff; width: 85%; max-width: 320px; z-index: 2000; box-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
+        /* Free Inbox Modal Styling */
+        #inbox-modal, #payment-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1c1f26; padding: 20px; border-radius: 15px; border: 2px solid #00d4ff; width: 90%; max-width: 340px; z-index: 2000; box-shadow: 0 0 30px rgba(0,0,0,1); }
         .close-btn { color: #00d4ff; float: right; cursor: pointer; font-size: 24px; margin-top: -10px; }
-        .unrestricted-tag { background: #ff0055; color: white; font-size: 9px; padding: 2px 5px; border-radius: 3px; font-weight: bold; vertical-align: middle; }
+        
+        .msg-box { background: #252932; padding: 10px; border-radius: 10px; margin-bottom: 10px; text-align: left; border-left: 3px solid #00d4ff; }
+        .msg-name { color: #00d4ff; font-weight: bold; font-size: 14px; display: block; }
+        .msg-text { font-size: 13px; color: #eee; }
     </style>
 </head>
 <body>
 
     <div class="nav">
-        <span style="font-weight: bold; color: #00d4ff; font-size: 18px;">SAVAGE AI <span style="font-size: 10px; color: #ff0055;">(NO LIMITS)</span></span>
-        <div class="coins">🪙 0 Coins</div>
+        <span style="font-weight: bold; color: #00d4ff; font-size: 18px;">SAVAGE AI CHAT</span>
+        <div class="coins" onclick="showPayment()">🪙 0 Coins</div>
     </div>
 
     <div class="hero">
         <div class="card">
-            <div class="ai-badge">UNRESTRICTED</div>
+            <div class="ai-badge">ONLINE</div>
             <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" alt="Zoya">
             <div class="info">
-                <h3 style="margin: 0;">Zoya (Private AI)</h3>
-                <p class="price">💎 100 Coins / min</p>
-                <p style="font-size: 11px; color: #888;">Chat Style: No Filters / Anything Goes</p>
+                <h3 style="margin: 0;">Zoya (AI Friend)</h3>
+                <p style="color:#00ff44; font-size: 12px;">● Always Active for Chat</p>
             </div>
-            <button class="call-btn" onclick="startCall()">START PRIVATE CALL</button>
+            <button class="call-btn" onclick="startCall()">VIDEO CALL</button>
         </div>
-
+        
         <div class="card">
-            <div class="ai-badge">UNRESTRICTED</div>
+            <div class="ai-badge">ONLINE</div>
             <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=500" alt="Sara">
             <div class="info">
-                <h3 style="margin: 0;">Sara (Bold AI)</h3>
-                <p class="price">💎 150 Coins / min</p>
-                <p style="font-size: 11px; color: #888;">Chat Style: Extremely Bold & Interactive</p>
+                <h3 style="margin: 0;">Sara (AI Model)</h3>
+                <p style="color:#00ff44; font-size: 12px;">● Available for Chat</p>
             </div>
-            <button class="call-btn" onclick="startCall()">START PRIVATE CALL</button>
+            <button class="call-btn" onclick="startCall()">VIDEO CALL</button>
         </div>
     </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="hidePopups()">🏠<br>Home</div>
-        <div class="nav-item" onclick="showInbox()">💬<br>Private Inbox</div>
-        <div class="nav-item" onclick="showPayment()">💰<br>Recharge</div>
+    <div id="inbox-modal">
+        <span class="close-btn" onclick="hidePopups()">×</span>
+        <h3 style="color: #00d4ff; margin-top: 0;">💬 Free Messages</h3>
+        <p style="font-size: 11px; color: #888; margin-bottom: 15px;">You have 30 minutes of free chat remaining.</p>
+        
+        <div class="msg-box">
+            <span class="msg-name">Zoya AI</span>
+            <span class="msg-text">Hey! Aapne mere messages ka reply nahi diya? Main bore ho rahi hoon... 🥺</span>
+        </div>
+
+        <div class="msg-box">
+            <span class="msg-name">Sara AI</span>
+            <span class="msg-text">Hi dear, can we talk about anything? No limits here. 😉</span>
+        </div>
+
+        <div class="msg-box" style="background: rgba(255, 0, 85, 0.1); border-left: 3px solid #ff0055;">
+            <span class="msg-name" style="color:#ff0055;">System Notice</span>
+            <span class="msg-text">Video call server is busy. Recharge to get instant VIP access.</span>
+        </div>
+        
+        <button style="background: #ffaa00; color: black; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer;" onclick="showPayment()">RECHARGE FOR VIDEO CALL</button>
     </div>
 
     <div id="payment-modal">
         <span class="close-btn" onclick="hidePopups()">×</span>
         <h3 style="color: #ffaa00;">💎 Get VIP Coins</h3>
-        <p style="font-size: 14px;">JazzCash / EasyPaisa</p>
-        <p style="color: #ffaa00; font-size: 22px; font-weight: bold;">03255335618</p>
-        <button style="background: #25d366; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; margin-top: 10px;" onclick="window.open('https://wa.me/923255335618?text=Unlock%20Unlimited%20AI%20Chat')">WhatsApp Admin</button>
+        <p style="font-size: 14px;">Send payment for instant activation:</p>
+        <p style="color: #ffaa00; font-size: 24px; font-weight: bold; margin: 10px 0;">03255335618</p>
+        <p style="font-size: 12px;">JazzCash / EasyPaisa (Noman)</p>
+        <button style="background: #25d366; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; margin-top: 15px; font-weight: bold;" onclick="window.open('https://wa.me/923255335618?text=I%20want%20to%20recharge%20coins%20for%20AI%20Chat')">Send Screenshot</button>
     </div>
 
-    <div id="inbox-modal">
-        <span class="close-btn" onclick="hidePopups()">×</span>
-        <h3 style="color: #ff0055;">🔥 Unrestricted Chat</h3>
-        <p style="font-size: 11px; color: #00ff44;">[30 MINS FREE - ALL FILTERS REMOVED]</p>
-        <div style="background: #333; padding: 8px; border-radius: 8px; color: #ffaa00; font-size: 14px; margin-bottom: 10px;">
-            Free Access: 29:54 Left
-        </div>
-        <hr style="border: 0.5px solid #444;">
-        <div style="text-align: left; padding: 10px;">
-            <p style="font-size: 13px;"><b>Zoya AI:</b> I'm feeling lonely... want to talk about anything? No rules tonight. 😉</p>
-        </div>
-        <button style="background: #ffaa00; color: black; border: none; padding: 10px; width: 100%; border-radius: 5px; font-weight: bold;" onclick="showPayment()">RECHARGE FOR PRIVATE CALL</button>
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="hidePopups()">🏠<br>Home</div>
+        <div class="nav-item" onclick="showInbox()">💬<br>Inbox <span style="background:#ff0055; border-radius:50%; padding:1px 5px; font-size:9px; color:white;">2</span></div>
+        <div class="nav-item" onclick="showPayment()">💰<br>Recharge</div>
     </div>
 
     <script>
-        function startCall() { alert("Security Notice: Private Video Calls require a VIP Gold Membership. Please recharge to bypass system restrictions."); showPayment(); }
-        function showPayment() { hidePopups(); document.getElementById('payment-modal').style.display = 'block'; }
         function showInbox() { hidePopups(); document.getElementById('inbox-modal').style.display = 'block'; }
-        function hidePopups() { document.getElementById('payment-modal').style.display = 'none'; document.getElementById('inbox-modal').style.display = 'none'; }
+        function showPayment() { hidePopups(); document.getElementById('payment-modal').style.display = 'block'; }
+        function hidePopups() { document.getElementById('inbox-modal').style.display = 'none'; document.getElementById('payment-modal').style.display = 'none'; }
+        function startCall() { alert("Insufficient Balance for Video Call. Please recharge your account."); showPayment(); }
     </script>
 </body>
-                </html>
-                
+</html>
