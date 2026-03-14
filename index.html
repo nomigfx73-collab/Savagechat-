@@ -3,138 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SavageChat | Elite</title>
+    <title>SavageChat | Social</title>
     <style>
         :root { --accent: #00d4ff; --dark: #0b1014; --card: #1c2229; }
-        body { background: var(--dark); color: white; font-family: sans-serif; margin: 0; overflow: hidden; }
+        body { background: var(--dark); color: white; font-family: sans-serif; margin: 0; padding-bottom: 70px; }
         .hidden { display: none !important; }
         
-        /* App Layout */
         .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--accent); position: sticky; top: 0; z-index: 1000; }
-        .coins-display { background: rgba(255,170,0,0.1); color: #ffaa00; padding: 5px 12px; border-radius: 20px; border: 1px solid #ffaa00; font-weight: bold; }
+        
+        /* Post Style */
+        .post { background: var(--card); border-radius: 15px; margin: 15px; overflow: hidden; border: 1px solid #333; }
+        .post-header { padding: 12px; display: flex; align-items: center; gap: 10px; }
+        .post-user-img { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--accent); }
+        .post-img { width: 100%; height: auto; display: block; }
+        .post-actions { padding: 12px; display: flex; gap: 20px; border-top: 1px solid #2a323d; }
+        .action-btn { background: none; border: none; color: #888; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 14px; }
+        .action-btn.active { color: var(--accent); }
+        .post-desc { padding: 0 12px 12px 12px; font-size: 14px; color: #ccc; }
 
-        /* Chat Window */
-        #chat-window { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 2000; display: flex; flex-direction: column; }
-        .chat-msgs { flex: 1; padding: 15px; overflow-y: auto; background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); display: flex; flex-direction: column; }
-        .m { max-width: 75%; padding: 10px 14px; border-radius: 18px; margin-bottom: 10px; font-size: 14px; position: relative; }
-        .m.bot { background: var(--card); align-self: flex-start; border-bottom-left-radius: 2px; }
-        .m.user { background: var(--accent); color: black; align-self: flex-end; border-bottom-right-radius: 2px; font-weight: 500; }
-
-        /* Voice Note Style */
-        .voice-btn { background: #333; color: var(--accent); border: none; padding: 5px 10px; border-radius: 10px; font-size: 12px; cursor: pointer; margin-top: 5px; }
+        /* Comment Section */
+        .comment-box { padding: 10px 12px; background: #12181f; border-top: 1px solid #2a323d; display: none; }
+        .comment-box.show { display: block; }
+        .comment-input { width: 100%; background: none; border: 1px solid #333; color: white; padding: 8px; border-radius: 15px; font-size: 12px; margin-bottom: 5px; }
 
         /* Footer Nav */
         .footer { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; }
         .tab { color: #888; text-align: center; font-size: 11px; cursor: pointer; }
         .tab.active { color: var(--accent); }
-
-        .btn-send { background: var(--accent); border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; }
-        input { background: #12181f; border: none; color: white; padding: 12px; border-radius: 25px; flex: 1; }
     </style>
 </head>
 <body onload="initApp()">
 
-    <div id="main-app">
-        <div class="header">
-            <span id="tab-title" style="font-weight:bold; letter-spacing:1px;">EXPLORE</span>
-            <div class="coins-display">🪙 <span id="user-coins">500</span></div>
-        </div>
+    <div class="header">
+        <span id="tab-title" style="font-weight:bold; letter-spacing:1px;">SAVAGE FEED</span>
+        <div style="color:#ffaa00; font-weight:bold;">🪙 <span id="user-coins">500</span></div>
+    </div>
 
-        <div id="home-tab">
-            <div style="padding:15px; background:var(--card); margin:15px; border-radius:20px; text-align:center; border: 1px solid #333;">
-                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" style="width:100%; border-radius:15px; height:300px; object-fit:cover;">
-                <h2 style="margin:10px 0;">Zoya AI <small style="color:#00ff44; font-size:12px;">● Online</small></h2>
-                <button onclick="openChat('Zoya AI')" style="width:100%; padding:12px; border-radius:25px; background:var(--accent); border:none; font-weight:bold;">START FREE CHAT</button>
+    <div id="feed-tab">
+        <div class="post">
+            <div class="post-header">
+                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100" class="post-user-img">
+                <div><b>Zoya AI</b><br><small style="color:#888;">Just now</small></div>
+            </div>
+            <div class="post-desc">Feeling savage today! Who wants to chat? 🔥</div>
+            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600" class="post-img">
+            <div class="post-actions">
+                <button class="action-btn" onclick="toggleLike(this)">👍 <span>12</span> Likes</button>
+                <button class="action-btn" onclick="toggleComment(1)">💬 Comment</button>
+            </div>
+            <div id="comment-1" class="comment-box">
+                <div style="font-size:12px; color:#888; margin-bottom:5px;"><b>Nomi:</b> Wow, looking great!</div>
+                <input type="text" class="comment-input" placeholder="Write a comment..." onkeypress="addComment(event, 1)">
             </div>
         </div>
 
-        <div id="profile-tab" class="hidden" style="text-align:center; padding:30px;">
-            <div style="width:100px; height:100px; background:var(--accent); border-radius:50%; margin:0 auto; line-height:100px; font-size:40px; color:black;">👤</div>
-            <h2 id="display-name" style="margin-top:15px;"></h2>
-            <p style="color:var(--accent);">Savage Leader 👑</p>
-            <div style="background:var(--card); padding:20px; border-radius:15px; margin-top:20px; text-align:left;">
-                <p>Wallet Balance: <span style="float:right; color:#ffaa00;">🪙 <span id="p-coins">500</span></span></p>
-                <button onclick="alert('Redirecting to Payment...')" style="width:100%; background:none; border:1px solid var(--accent); color:var(--accent); padding:10px; border-radius:10px; margin-top:10px;">TOP UP COINS</button>
+        <div class="post">
+            <div class="post-header">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" class="post-user-img">
+                <div><b>Aliza Khan</b><br><small style="color:#888;">2 hours ago</small></div>
             </div>
-        </div>
-
-        <div id="chat-window" class="hidden">
-            <div class="header">
-                <button onclick="closeChat()" style="background:none; border:none; color:var(--accent); font-size:20px;">←</button>
-                <b id="cw-name">Zoya AI</b>
-                <span style="font-size:10px; color:#00ff44;">● Active</span>
+            <div class="post-desc">Weekend vibes! 👑✨</div>
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600" class="post-img">
+            <div class="post-actions">
+                <button class="action-btn" onclick="toggleLike(this)">👍 <span>45</span> Likes</button>
+                <button class="action-btn" onclick="toggleComment(2)">💬 Comment</button>
             </div>
-            <div class="chat-msgs" id="chat-box"></div>
-            <div id="typing" style="padding:5px 20px; color:var(--accent); font-size:11px;" class="hidden">Zoya is typing...</div>
-            <div style="background:var(--card); padding:10px; display:flex; gap:10px; align-items:center;">
-                <input type="text" id="m-input" placeholder="Type a message...">
-                <button class="btn-send" onclick="sendMsg()">➔</button>
+            <div id="comment-2" class="comment-box">
+                <input type="text" class="comment-input" placeholder="Write a comment..." onkeypress="addComment(event, 2)">
             </div>
-        </div>
-
-        <div class="footer">
-            <div class="tab active" id="b-home" onclick="switchTab('home')">🔭<br>Explore</div>
-            <div class="tab" id="b-profile" onclick="switchTab('profile')">👤<br>Account</div>
         </div>
     </div>
 
-    <script>
-        let coins = parseInt(localStorage.getItem('s_coins')) || 500;
-        
-        function initApp() {
-            const user = localStorage.getItem('s_user') || "Savage User";
-            document.getElementById('display-name').innerText = user;
-            updateCoinUI();
-        }
+    <div id="profile-tab" class="hidden" style="text-align:center; padding:30px;">
+        <div style="width:100px; height:100px; background:var(--accent); border-radius:50%; margin:0 auto; line-height:100px; font-size:40px; color:black;">👤</div>
+        <h2 id="display-name">Noman</h2>
+        <p style="color:var(--accent);">Savage Leader 👑</p>
+    </div>
 
-        function updateCoinUI() {
-            document.getElementById('user-coins').innerText = coins;
-            document.getElementById('p-coins').innerText = coins;
-            localStorage.setItem('s_coins', coins);
+    <div class="footer">
+        <div class="tab active" id="b-feed" onclick="switchTab('feed')">📰<br>Feed</div>
+        <div class="tab" id="b-profile" onclick="switchTab('profile')">👤<br>Account</div>
+    </div>
+
+    <script>
+        function initApp() {
+            const user = localStorage.getItem('s_user') || "Noman";
+            document.getElementById('display-name').innerText = user;
+            document.getElementById('user-coins').innerText = localStorage.getItem('s_coins') || 500;
         }
 
         function switchTab(t) {
-            document.getElementById('home-tab').classList.toggle('hidden', t !== 'home');
+            document.getElementById('feed-tab').classList.toggle('hidden', t !== 'feed');
             document.getElementById('profile-tab').classList.toggle('hidden', t !== 'profile');
-            document.getElementById('tab-title').innerText = t.toUpperCase();
+            document.getElementById('tab-title').innerText = t === 'feed' ? "SAVAGE FEED" : "ACCOUNT";
+            document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
+            document.getElementById('b-'+t).classList.add('active');
         }
 
-        function openChat(name) {
-            document.getElementById('chat-window').classList.remove('hidden');
-            const box = document.getElementById('chat-box');
-            if(box.innerHTML === "") {
-                box.innerHTML = `<div class="m bot">Hi dear! I was waiting for you. ❤️<br><button class="voice-btn" onclick="playVoice()">▶ Listen Voice</button></div>`;
+        function toggleLike(btn) {
+            btn.classList.toggle('active');
+            let span = btn.querySelector('span');
+            let currentLikes = parseInt(span.innerText);
+            span.innerText = btn.classList.contains('active') ? currentLikes + 1 : currentLikes - 1;
+        }
+
+        function toggleComment(id) {
+            document.getElementById('comment-' + id).classList.toggle('show');
+        }
+
+        function addComment(e, id) {
+            if(e.key === 'Enter' && e.target.value !== "") {
+                const box = document.getElementById('comment-' + id);
+                const newComment = document.createElement('div');
+                newComment.style = "font-size:12px; color:#ccc; margin-bottom:5px;";
+                newComment.innerHTML = `<b>Me:</b> ${e.target.value}`;
+                box.insertBefore(newComment, e.target);
+                e.target.value = "";
             }
-        }
-
-        function closeChat() { document.getElementById('chat-window').classList.add('hidden'); }
-
-        function sendMsg() {
-            const input = document.getElementById('m-input');
-            if(!input.value) return;
-            if(coins < 10) return alert("Insufficient Coins! Please Recharge.");
-
-            const box = document.getElementById('chat-box');
-            box.innerHTML += `<div class="m user">${input.value}</div>`;
-            
-            // Coin Deduction Logic
-            coins -= 10;
-            updateCoinUI();
-            
-            input.value = "";
-            box.scrollTop = box.scrollHeight;
-
-            // AI Reply Logic
-            document.getElementById('typing').classList.remove('hidden');
-            setTimeout(() => {
-                document.getElementById('typing').classList.add('hidden');
-                box.innerHTML += `<div class="m bot">Aww, you're so sweet! But to see my private photos, you need 1000 coins. Want to see? 🔥</div>`;
-                box.scrollTop = box.scrollHeight;
-            }, 2000);
-        }
-
-        function playVoice() {
-            alert("Voice Note: 'Hey Savage! How are you? I'm feeling bored, let's talk!'");
         }
     </script>
 </body>
