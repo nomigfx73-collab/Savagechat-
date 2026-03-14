@@ -2,93 +2,106 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SavageChat | Official</title>
-    <style>
-        body { background: #0b1014; color: white; font-family: sans-serif; margin: 0; padding-bottom: 80px; }
-        .hidden { display: none !important; }
-        .nav { background: #1c2229; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .btn-main { background: #00d4ff; color: black; border: none; padding: 12px; border-radius: 25px; font-weight: bold; width: 100%; cursor: pointer; }
-        
-        /* Inbox Styles */
-        .chat-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #1c2229; cursor: pointer; transition: 0.3s; }
-        .chat-item:active { background: #12181f; }
-        .chat-avatar { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; margin-right: 15px; border: 2px solid #00d4ff; }
-        .chat-info { flex: 1; }
-        .chat-name { font-weight: bold; font-size: 16px; margin-bottom: 4px; display: flex; justify-content: space-between; }
-        .chat-msg { color: #888; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
-        .time { font-size: 11px; color: #555; font-weight: normal; }
-        .unread-dot { width: 10px; height: 10px; background: #00d4ff; border-radius: 50%; float: right; margin-top: 5px; }
+    
+    <meta name="theme-color" content="#0b1014">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-        /* General Layout */
-        .card { background: #1c2229; border-radius: 15px; margin: 15px; overflow: hidden; border: 1px solid #2a323d; }
-        .card img { width: 100%; height: 350px; object-fit: cover; }
-        .card-body { padding: 15px; }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1c2229; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; z-index: 1000; }
-        .nav-item { cursor: pointer; text-align: center; font-size: 12px; color: #888; flex: 1; }
-        .nav-item.active { color: #00d4ff; font-weight: bold; }
-        input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #12181f; color: white; }
+    <style>
+        body { background: #0b1014; color: white; font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; padding-bottom: 80px; overflow-x: hidden; }
+        .hidden { display: none !important; }
+        
+        /* App Bar */
+        .nav { background: #1c2229; padding: 18px; border-bottom: 1px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        
+        /* Buttons */
+        .btn-main { background: linear-gradient(45deg, #00d4ff, #0055ff); color: white; border: none; padding: 14px; border-radius: 30px; font-weight: bold; width: 100%; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Inbox UI */
+        .chat-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #161b22; background: #0b1014; }
+        .chat-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-right: 15px; border: 2px solid #00d4ff; }
+        .chat-info { flex: 1; }
+        .chat-name { font-weight: 600; font-size: 16px; margin-bottom: 4px; display: flex; justify-content: space-between; }
+        .chat-msg { color: #8b949e; font-size: 13px; }
+        .unread-badge { background: #00d4ff; color: black; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: bold; }
+
+        /* Explore Cards */
+        .card { background: #1c2229; border-radius: 20px; margin: 15px; overflow: hidden; border: 1px solid #30363d; }
+        .card img { width: 100%; height: 400px; object-fit: cover; }
+        
+        /* Bottom Navigation */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(28, 34, 41, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #30363d; z-index: 1000; }
+        .nav-item { cursor: pointer; text-align: center; font-size: 11px; color: #8b949e; flex: 1; transition: 0.3s; }
+        .nav-item.active { color: #00d4ff; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+
+        /* Form */
+        input { width: 85%; padding: 14px; margin: 12px 0; border-radius: 12px; border: 1px solid #30363d; background: #0d1117; color: white; font-size: 16px; }
     </style>
 </head>
 <body onload="checkLogin()">
 
-    <div id="login-page" style="text-align:center; padding-top:100px;">
-        <h1 style="color:#00d4ff;">SAVAGE CHAT</h1>
-        <input type="text" id="username" placeholder="Aapka Naam">
+    <div id="login-page" style="text-align:center; padding: 100px 20px 0 20px;">
+        <div style="font-size: 60px; margin-bottom: 10px;">⚡</div>
+        <h1 style="color:#00d4ff; margin:0;">SAVAGE CHAT</h1>
+        <p style="color:#8b949e; margin-bottom: 30px;">Professional AI Chat Experience</p>
+        <input type="text" id="username" placeholder="Full Name">
         <input type="email" id="email" placeholder="Email Address">
-        <button class="btn-main" style="max-width:250px; margin-top: 20px;" onclick="handleLogin()">JOIN SAVAGE CLUB</button>
+        <div style="margin-top: 20px;">
+            <button class="btn-main" style="max-width:280px;" onclick="handleLogin()">Get Started</button>
+        </div>
     </div>
 
     <div id="app-content" class="hidden">
         <div class="nav">
-            <span id="nav-title" style="color:#00d4ff; font-weight:bold; font-size:18px;">EXPLORE</span>
-            <div style="background:#ffaa00; color:black; padding:5px 15px; border-radius:20px; font-weight:bold; font-size:13px;">🪙 500</div>
+            <span id="nav-title" style="font-weight:bold; font-size:20px;">EXPLORE</span>
+            <div style="background:rgba(255, 170, 0, 0.2); color:#ffaa00; padding:6px 14px; border-radius:20px; font-weight:bold; font-size:14px; border: 1px solid #ffaa00;">🪙 500</div>
         </div>
 
         <div id="home-tab">
             <div class="card">
                 <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500">
-                <div class="card-body">
-                    <h3>Zoya AI</h3>
-                    <button class="btn-main" onclick="showTab('inbox')">SEND MESSAGE</button>
+                <div class="card-body" style="padding: 20px;">
+                    <h2 style="margin: 0 0 10px 0;">Zoya AI <span style="font-size: 12px; color: #00ff44;">● Online</span></h2>
+                    <button class="btn-main" onclick="showTab('inbox')">Send Message</button>
                 </div>
             </div>
         </div>
 
         <div id="inbox-tab" class="hidden">
-            <div class="chat-item" onclick="alert('Opening chat with Zoya...')">
+            <div class="chat-item" onclick="alert('Opening chat...')">
                 <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" class="chat-avatar">
                 <div class="chat-info">
-                    <div class="chat-name">Zoya AI <span class="time">2:15 PM</span></div>
-                    <div class="chat-msg">Hey Savage! Aapne reply nahi kiya... ❤️</div>
+                    <div class="chat-name">Zoya AI <span style="color:#555; font-size:11px;">10:45 AM</span></div>
+                    <div class="chat-msg">Savage! New photo uploaded. Check it out? 🔥</div>
                 </div>
-                <div class="unread-dot"></div>
-            </div>
-
-            <div class="chat-item" onclick="alert('Opening chat with Aliza...')">
-                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500" class="chat-avatar">
-                <div class="chat-info">
-                    <div class="chat-name">Aliza Khan <span class="time">Yesterday</span></div>
-                    <div class="chat-msg">Coins transfer ho gaye hain, thanks!</div>
-                </div>
+                <div class="unread-badge">1</div>
             </div>
         </div>
 
-        <div id="profile-tab" class="hidden" style="text-align:center; padding-top:30px;">
-            <div style="width:100px; height:100px; background:#00d4ff; border-radius:50%; margin: 0 auto; line-height:100px; font-size:40px; color:black;">👤</div>
-            <h2 id="p-name" style="margin:15px 0 5px 0;"></h2>
-            <p id="p-email" style="color:#888; font-size:14px;"></p>
-            <div style="background:#1c2229; margin:20px; padding:15px; border-radius:15px; border: 1px solid #333;">
-                <p>Status: <span style="color:#00ff44;">Verified Savage Leader</span></p>
-                <p>Wallet: 🪙 500 Coins</p>
+        <div id="profile-tab" class="hidden" style="text-align:center; padding: 40px 20px;">
+            <div class="avatar" style="width:110px; height:110px; background:#00d4ff; border-radius:50%; margin: 0 auto; line-height:110px; font-size:45px; color:black;">👤</div>
+            <h2 id="p-name" style="margin:20px 0 5px 0;"></h2>
+            <p id="p-email" style="color:#8b949e;"></p>
+            
+            <div style="background:#1c2229; border-radius:15px; margin: 30px 0; text-align: left; padding: 5px;">
+                <div style="padding: 15px; border-bottom: 1px solid #30363d; display: flex; justify-content: space-between;">
+                    <span>Rank</span><span style="color:#00d4ff;">Savage Leader 👑</span>
+                </div>
+                <div style="padding: 15px; display: flex; justify-content: space-between;">
+                    <span>Coins Balance</span><span style="color:#ffaa00;">🪙 500</span>
+                </div>
             </div>
-            <button class="btn-main" onclick="logout()" style="max-width:200px; background:transparent; color:#ff0055; border:1px solid #ff0055;">Logout</button>
+            
+            <button class="btn-main" onclick="logout()" style="background:transparent; color:#ff3b3b; border: 1px solid #ff3b3b;">Sign Out</button>
         </div>
 
         <div class="bottom-nav">
-            <div class="nav-item active" id="btn-home" onclick="showTab('home')">🌍<br>Explore</div>
+            <div class="nav-item active" id="btn-home" onclick="showTab('home')">🔭<br>Explore</div>
             <div class="nav-item" id="btn-inbox" onclick="showTab('inbox')">💬<br>Inbox</div>
-            <div class="nav-item" id="btn-profile" onclick="showTab('profile')">👤<br>Profile</div>
+            <div class="nav-item" id="btn-profile" onclick="showTab('profile')">👤<br>Account</div>
         </div>
     </div>
 
@@ -96,7 +109,7 @@
         function handleLogin() {
             const name = document.getElementById('username').value;
             const email = document.getElementById('email').value;
-            if(!name || !email) return alert("Details enter karein!");
+            if(!name || !email) return alert("Please fill all details");
             localStorage.setItem('savage_user', JSON.stringify({name, email}));
             location.reload();
         }
@@ -129,7 +142,7 @@
             } else {
                 document.getElementById('profile-tab').classList.remove('hidden');
                 document.getElementById('btn-profile').classList.add('active');
-                document.getElementById('nav-title').innerText = "MY PROFILE";
+                document.getElementById('nav-title').innerText = "MY ACCOUNT";
             }
         }
 
@@ -139,5 +152,4 @@
         }
     </script>
 </body>
-                                                          </html>
-                                                          
+</html>
