@@ -3,35 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Savage App | Commercial v33</title>
+    <title>Savage App | Commercial v34</title>
     <style>
-        :root { --accent: #00d4ff; --dark: #0b1014; --card: #1c2229; --gold: #ffaa00; }
-        body { background: var(--dark); color: white; font-family: sans-serif; margin: 0; padding-bottom: 75px; }
+        :root { --accent: #00d4ff; --dark: #0b1014; --card: #1c2229; --gold: #ffaa00; --green: #25d366; }
+        body { background: var(--dark); color: white; font-family: sans-serif; margin: 0; padding-bottom: 75px; overflow-x: hidden; }
         .hidden { display: none !important; }
         
-        /* Headers */
+        /* 12, 13: Remember Account & Header */
         .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--accent); position: sticky; top: 0; z-index: 1000; }
-        .coins-badge { background: rgba(255,170,0,0.1); color: var(--gold); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--gold); font-weight: bold; }
+        .coins-badge { background: rgba(255,170,0,0.1); color: var(--gold); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--gold); font-weight: bold; cursor: pointer; }
 
         /* Sale Banner */
-        .sale-banner { background: linear-gradient(90deg, #ff0055, #ffaa00); color: white; padding: 10px; text-align: center; font-size: 12px; font-weight: bold; letter-spacing: 1px; }
+        .sale-banner { background: linear-gradient(90deg, #ff0055, #ffaa00); color: white; padding: 10px; text-align: center; font-size: 11px; font-weight: bold; letter-spacing: 1px; }
 
-        /* Home UI */
+        /* 3: Live Stream Box */
         .live-scroll { display: flex; overflow-x: auto; padding: 10px; gap: 10px; background: #0e141a; }
         .live-u { min-width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ff0055; padding: 2px; position: relative; }
         .live-u img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
         .tag { position: absolute; bottom: -5px; left: 15%; background: #ff0055; font-size: 8px; padding: 2px 6px; border-radius: 10px; }
 
+        /* 2, 10: Post Box & Like/Comment */
         .post { background: var(--card); border-radius: 15px; margin: 15px; border: 1px solid #333; overflow: hidden; }
         .post-img { width: 100%; height: auto; display: block; }
         .post-acts { padding: 12px; display: flex; gap: 20px; border-top: 1px solid #2a323d; }
         .act-btn { background: none; border: none; color: #888; font-size: 14px; cursor: pointer; }
 
-        /* Service Grid */
+        /* 4, 5, 8, 14: Service Grid */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
-        .card { background: var(--card); padding: 25px 10px; border-radius: 15px; text-align: center; border: 1px solid #333; }
+        .card { background: var(--card); padding: 25px 10px; border-radius: 15px; text-align: center; border: 1px solid #333; cursor: pointer; }
 
-        /* Chat Window */
+        /* 1, 7, 9: Chat System */
         .win { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 2000; display: flex; flex-direction: column; }
         .msgs { flex: 1; padding: 15px; overflow-y: auto; background: #0b1014; display: flex; flex-direction: column; }
         .msg { max-width: 75%; padding: 10px; border-radius: 12px; margin-bottom: 10px; font-size: 14px; }
@@ -47,15 +48,15 @@
 <body onload="init()">
 
     <div id="login-screen" style="text-align:center; padding: 100px 20px;">
-        <h1 style="color:var(--accent);">SAVAGE LOG-IN</h1>
-        <input type="text" id="uname" placeholder="Your Name" style="width:85%; padding:15px; background:var(--card); border:1px solid #333; color:white; border-radius:12px;"><br><br>
-        <button onclick="login()" style="width:85%; padding:15px; background:var(--accent); border:none; border-radius:30px; font-weight:bold;">ENTER APP</button>
+        <h1 style="color:var(--accent);">SAVAGE LOGIN</h1>
+        <input type="text" id="uname" placeholder="Enter Name" style="width:85%; padding:15px; background:var(--card); border:1px solid #333; color:white; border-radius:12px;"><br><br>
+        <button onclick="login()" style="width:85%; padding:15px; background:var(--accent); border:none; border-radius:30px; font-weight:bold;">START</button>
     </div>
 
     <div id="app" class="hidden">
-        <div class="sale-banner">🔥 SALE: $1 = 1,000 COINS | V-CALL: 1,000 COINS / MIN</div>
+        <div class="sale-banner">🔥 SALE: $1 = 1,000 COINS | V-CALL: 1k / MIN</div>
         <div class="header">
-            <b id="tab-name">HOME</b>
+            <b id="tab-name">SAVAGE HOME</b>
             <div class="coins-badge" onclick="nav('service')">🪙 <span id="c-ui">1000</span></div>
         </div>
 
@@ -65,7 +66,7 @@
                 <div class="live-u" onclick="vcall('Sara')"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100"><span class="tag">LIVE</span></div>
             </div>
             <div class="post">
-                <div style="padding:10px;"><b>Zoya AI</b> <small style="color:var(--accent); margin-left:5px;">● Official</small></div>
+                <div style="padding:10px;"><b>Official AI</b> <small style="color:var(--accent);">● Post</small></div>
                 <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600" class="post-img">
                 <div class="post-acts">
                     <button class="act-btn" onclick="this.style.color='var(--accent)'">👍 Like</button>
@@ -76,7 +77,7 @@
 
         <div id="t-service" class="hidden">
             <div class="grid">
-                <div class="card" onclick="vcall('Random Girl')">📹<br>Paid V-Call<br><small style="color:var(--gold);">$1 / min</small></div>
+                <div class="card" onclick="vcall('Random')">📹<br>Paid V-Call<br><small style="color:var(--gold);">1k / min</small></div>
                 <div class="card" onclick="window.open('https://wa.me/923000000000','_blank')">💬<br>WhatsApp</div>
                 <div class="card" onclick="topup()">💰<br>Buy Coins<br><small style="color:var(--gold);">$1 = 1k</small></div>
                 <div class="card" onclick="alert('Downloading APK...')">📥<br>Get APK</div>
@@ -85,7 +86,7 @@
 
         <div id="t-inbox" class="hidden">
             <div style="padding:15px; border-bottom:1px solid #333;" onclick="openChat('Zoya AI')">
-                <b>Zoya AI (Agent)</b><br><small style="color:#888;">Hi Nomi! Want to video call? ❤️</small>
+                <b>Zoya AI (Human Agent)</b><br><small style="color:#888;">Nomi, recharge coins for call!</small>
             </div>
         </div>
 
@@ -98,18 +99,18 @@
             </div>
             <h2 id="my-name"></h2>
             <p style="color:var(--accent);">Savage Leader 👑</p>
-            <button onclick="logout()" style="margin-top:40px; color:#ff4444; background:none; border:none;">Log Out</button>
+            <button onclick="logout()" style="margin-top:40px; color:#ff4444; background:none; border:none;">Logout</button>
         </div>
 
         <div id="chat-win" class="win hidden">
             <div class="header">
                 <button onclick="closeChat()" style="background:none; border:none; color:var(--accent); font-size:20px;">←</button>
                 <b id="c-title">Chat</b>
-                <span style="font-size:10px; color:#00ff44;">● AGENT ONLINE</span>
+                <span style="font-size:10px; color:#00ff44;">● ONLINE</span>
             </div>
             <div class="msgs" id="m-box"></div>
             <div style="background:var(--card); padding:10px; display:flex; gap:10px;">
-                <input type="text" id="m-in" placeholder="Free Chat..." style="flex:1; background:#12181f; border:none; color:white; padding:12px; border-radius:20px;">
+                <input type="text" id="m-in" placeholder="Message..." style="flex:1; background:#12181f; border:none; color:white; padding:12px; border-radius:20px;">
                 <button onclick="sendMsg()" style="background:var(--accent); border:none; border-radius:50%; width:40px; height:40px;">➔</button>
             </div>
         </div>
@@ -123,6 +124,8 @@
     </div>
 
     <script>
+        // --- 4, 5: PAYMENT CONFIG ---
+        const MY_JAZZCASH = "0300-XXXXXXX"; // <--- APNA NUMBER YAHAN LIKHEIN
         let coins = parseInt(localStorage.getItem('s_coins')) || 1000;
 
         function init() {
@@ -154,7 +157,7 @@
             document.getElementById('t-'+t).classList.remove('hidden');
             document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
             document.getElementById('b-'+t.substring(0,4)).classList.add('active');
-            document.getElementById('tab-name').innerText = t.toUpperCase();
+            document.getElementById('tab-name').innerText = "SAVAGE " + t.toUpperCase();
         }
 
         function openChat(n) {
@@ -169,24 +172,22 @@
             const b = document.getElementById('m-box');
             b.innerHTML += `<div class="msg u">${i.value}</div>`;
             i.value = "";
-            setTimeout(() => { b.innerHTML += `<div class="msg b">Hey Savage! Recharge 1000 coins to call me right now. ❤️</div>`; b.scrollTop = b.scrollHeight; }, 1000);
+            setTimeout(() => { b.innerHTML += `<div class="msg b">Call me for 1 minute in just 1000 coins! ❤️</div>`; b.scrollTop = b.scrollHeight; }, 1000);
         }
 
+        // 8: PAID V-CALL LOGIC (1k COINS = 1 MIN)
         function vcall(name) {
-            if(coins < 1000) return alert("You need 1,000 coins ($1) for 1 minute Video Call!");
-            const confirmCall = confirm("Call " + name + "? (Rate: 1,000 Coins / Minute)");
-            if(confirmCall) {
-                coins -= 1000;
-                updateU();
-                alert("Connecting to Private Video Call with " + name + "...");
-            }
+            if(coins < 1000) return alert("Low Balance! $1 (1000 coins) required.");
+            const ok = confirm("Call " + name + " for 1 minute?");
+            if(ok) { coins -= 1000; updateU(); alert("Connecting..."); }
         }
 
+        // 5: TOPUP GATEWAY
         function topup() {
-            const amount = prompt("Enter USD Amount to Recharge (e.g. 1, 5, 10)");
-            if(amount && !isNaN(amount)) {
-                alert("Processing $" + amount + " Topup... Please send payment to EasyPaisa/JazzCash.");
-                // For testing: coins += (amount * 1000); updateU();
+            const usd = prompt("Enter Dollars ($1 = 1000 coins):", "1");
+            if(usd && !isNaN(usd)) {
+                const pkr = usd * 280; // Estimated rate
+                alert("PLEASE PAY Rs."+pkr+" to JAZZCASH: " + MY_JAZZCASH + "\n\nSend screenshot to WhatsApp for coins.");
             }
         }
 
