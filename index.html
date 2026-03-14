@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SavageChat | Personal Profiles</title>
+    <title>SavageChat | Secured Permissions</title>
     <style>
         body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 70px; }
         .hidden { display: none !important; }
         .nav { background: #1c1f26; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
         .stat-card { background: linear-gradient(135deg, #1c1f26, #111); padding: 20px; border-radius: 15px; margin: 15px; border: 1px solid #333; }
-        input, select, textarea { width: 90%; max-width: 300px; padding: 12px; margin: 10px auto; border-radius: 10px; background: #1c1f26; color: white; border: 1px solid #333; display: block; }
+        input, select, textarea { width: 90%; max-width: 300px; padding: 12px; margin: 10px auto; border-radius: 10px; background: #1c1f26; color: white; border: 1px solid #444; display: block; }
         .btn-action { background: #00d4ff; color: black; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .perm-status { font-size: 11px; margin-top: 10px; color: #ffaa00; }
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1c1f26; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
-        .profile-header { text-align: center; padding: 20px; }
-        .profile-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #00d4ff; margin-bottom: 10px; }
     </style>
 </head>
 <body onload="checkLogin()">
@@ -21,12 +20,12 @@
     <div id="auth-screen" style="text-align:center; padding-top:60px;">
         <h2 style="color:#00d4ff;">SAVAGE CHAT</h2>
         <input type="text" id="uname" placeholder="Full Name">
-        <input type="number" id="uage" placeholder="Age (18+)">
         <select id="urole">
             <option value="gifter">I am a Boy (Gifter)</option>
             <option value="earner">I am a Girl (Earner)</option>
         </select>
         <button class="btn-action" onclick="login()">Create Account</button>
+        <p style="font-size: 10px; color: #888; margin-top: 20px;">By joining, you allow Microphone & Camera access.</p>
     </div>
 
     <div id="app-screen" class="hidden">
@@ -36,33 +35,34 @@
         </div>
 
         <div id="home-view">
-            <div class="stat-card" style="text-align:center;">
-                <h3 id="welcome-name"></h3>
-                <p id="user-bio-display" style="color:#aaa; font-style:italic;">No bio added yet...</p>
-                <button class="btn-action" onclick="showPage('profile')">Edit Profile</button>
+            <div class="stat-card" style="border: 1px solid #00ff44;">
+                <h4 style="margin:0; color:#00ff44;">System Permissions</h4>
+                <p style="font-size:12px; color:#aaa;">Enable all for smooth Video Calls</p>
+                <div id="perm-list" style="text-align:left; font-size:13px;">
+                    🎤 Mic: <span id="mic-st">Checking...</span><br>
+                    📷 Camera: <span id="cam-st">Checking...</span><br>
+                    📍 Location: <span id="loc-st">Checking...</span>
+                </div>
+                <button class="btn-action" style="font-size:12px;" onclick="requestAllPermissions()">Allow All Permissions</button>
             </div>
-            
-            <div id="gifter-stats" class="stat-card hidden" style="text-align:center;">
-                <p>Coins</p><h2>🪙 0</h2>
-                <button class="btn-action" onclick="alert('Contact Noman: 03255335618')">BUY COINS</button>
+
+            <div id="user-stats" class="stat-card" style="text-align:center;">
+                <p>Welcome to Savage World</p>
+                <button class="btn-action" onclick="showPage('profile')">My Profile</button>
             </div>
         </div>
 
         <div id="profile-view" class="hidden">
-            <div class="profile-header">
-                <img src="https://via.placeholder.com/100/00d4ff/000000?text=User" class="profile-img">
-                <h3>Profile Settings</h3>
-            </div>
-            <div style="text-align:center;">
-                <textarea id="edit-bio" placeholder="Write a short Bio..."></textarea>
-                <textarea id="edit-reason" placeholder="Reason for joining SavageChat?"></textarea>
-                <button class="btn-action" style="background:#00ff44;" onclick="saveProfile()">Save Profile Details</button>
+            <div style="text-align:center; padding:20px;">
+                <h3>Profile Details</h3>
+                <textarea id="edit-bio" placeholder="Bio"></textarea>
+                <button class="btn-action" onclick="saveProfile()">Save</button>
             </div>
         </div>
 
         <div class="bottom-nav">
             <div onclick="showPage('home')">🏠 Home</div>
-            <div onclick="alert('Inbox functionality active')">💬 Inbox</div>
+            <div onclick="alert('Chat Active')">💬 Inbox</div>
             <div onclick="showPage('profile')">👤 Profile</div>
         </div>
     </div>
@@ -80,17 +80,9 @@
 
         function login() {
             let name = document.getElementById('uname').value;
-            let age = document.getElementById('uage').value;
             let role = document.getElementById('urole').value;
-
-            if(!name || age < 18) { alert("Invalid details or Under 18!"); return; }
-
-            userData = { 
-                name: name, 
-                role: role, 
-                bio: "Welcome to my profile!", 
-                reason: "To meet new people" 
-            };
+            if(!name) return;
+            userData = { name: name, role: role, bio: "Available" };
             localStorage.setItem('savageUser', JSON.stringify(userData));
             loadApp();
         }
@@ -99,28 +91,32 @@
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-screen').classList.remove('hidden');
             document.getElementById('name-tag').innerText = userData.name.toUpperCase();
-            document.getElementById('welcome-name').innerText = "Hello, " + userData.name;
-            
-            // Display Bio
-            document.getElementById('user-bio-display').innerText = userData.bio;
-            
-            // Set inputs in profile page
-            document.getElementById('edit-bio').value = userData.bio;
-            document.getElementById('edit-reason').value = userData.reason;
-
-            if(userData.role === 'gifter') {
-                document.getElementById('gifter-stats').classList.remove('hidden');
-            }
+            requestAllPermissions();
         }
 
-        function saveProfile() {
-            userData.bio = document.getElementById('edit-bio').value;
-            userData.reason = document.getElementById('edit-reason').value;
-            
-            localStorage.setItem('savageUser', JSON.stringify(userData));
-            alert("Profile Updated!");
-            showPage('home');
-            loadApp();
+        async function requestAllPermissions() {
+            try {
+                // Mic & Camera Permission
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+                document.getElementById('mic-st').innerText = "✅ Allowed";
+                document.getElementById('cam-st').innerText = "✅ Allowed";
+                // Speaker auto access with audio
+                
+                // Location Permission
+                navigator.geolocation.getCurrentPosition(() => {
+                    document.getElementById('loc-st').innerText = "✅ Allowed";
+                }, () => {
+                    document.getElementById('loc-st').innerText = "❌ Denied";
+                });
+
+                // Stop stream after check
+                stream.getTracks().forEach(track => track.stop());
+
+            } catch (err) {
+                document.getElementById('mic-st').innerText = "❌ Denied";
+                document.getElementById('cam-st').innerText = "❌ Denied";
+                alert("Please enable Camera & Mic in Browser Settings for Video Calls.");
+            }
         }
 
         function showPage(p) {
