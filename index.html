@@ -3,46 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Savage App | Public Network v36</title>
+    <title>Savage Network v37</title>
     <style>
         :root { --accent: #00d4ff; --dark: #0b1014; --card: #1c2229; --gold: #ffaa00; }
         body { background: var(--dark); color: white; font-family: sans-serif; margin: 0; padding-bottom: 75px; overflow-x: hidden; }
         .hidden { display: none !important; }
         
-        /* Header & Banner */
         .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--accent); position: sticky; top: 0; z-index: 1000; }
-        .coins-badge { background: rgba(255,170,0,0.1); color: var(--gold); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--gold); font-weight: bold; cursor: pointer; }
-        .sale-banner { background: linear-gradient(90deg, #ff0055, #ffaa00); color: white; padding: 10px; text-align: center; font-size: 11px; font-weight: bold; }
+        .coins-badge { background: rgba(255,170,0,0.1); color: var(--gold); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--gold); font-weight: bold; }
 
-        /* Public Profiles (Home) */
-        .section-title { padding: 10px 15px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
-        .profiles-row { display: flex; overflow-x: auto; padding: 10px; gap: 15px; background: #0e141a; }
-        .p-card { min-width: 70px; text-align: center; }
-        .p-card img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
-        .p-card span { display: block; font-size: 10px; margin-top: 5px; color: #ccc; }
+        /* Public Profiles Tray */
+        .section-title { padding: 15px; font-size: 13px; font-weight: bold; color: var(--accent); text-transform: uppercase; }
+        .profiles-tray { display: flex; overflow-x: auto; padding: 10px; gap: 15px; background: #0e141a; border-bottom: 1px solid #222; }
+        .p-card { min-width: 80px; text-align: center; background: var(--card); padding: 10px; border-radius: 12px; border: 1px solid #333; }
+        .p-card img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+        .p-card span { display: block; font-size: 10px; margin: 5px 0; color: #fff; font-weight: bold; }
+        .add-btn { background: var(--accent); color: black; border: none; font-size: 9px; padding: 4px 8px; border-radius: 10px; font-weight: bold; cursor: pointer; }
 
-        /* Public Posts */
+        /* Posts */
         .post { background: var(--card); border-radius: 15px; margin: 15px; border: 1px solid #333; overflow: hidden; }
         .post-header { padding: 12px; display: flex; align-items: center; gap: 10px; }
         .post-header img { width: 35px; height: 35px; border-radius: 50%; }
         .post-img { width: 100%; height: auto; display: block; }
         .post-acts { padding: 12px; display: flex; gap: 20px; border-top: 1px solid #2a323d; }
-        .act-btn { background: none; border: none; color: #888; font-size: 14px; cursor: pointer; }
+        .act-btn { background: none; border: none; color: #888; font-size: 14px; }
 
-        /* Service & Grid */
+        /* Grid */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
-        .card { background: var(--card); padding: 25px 10px; border-radius: 15px; text-align: center; border: 1px solid #333; cursor: pointer; }
-
-        /* Chat System */
-        .win { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 2000; display: flex; flex-direction: column; }
-        .msgs { flex: 1; padding: 15px; overflow-y: auto; background: #0b1014; display: flex; flex-direction: column; }
-        .msg { max-width: 75%; padding: 10px; border-radius: 12px; margin-bottom: 10px; font-size: 14px; }
-        .msg.u { align-self: flex-end; background: var(--accent); color: black; font-weight: bold; }
-        .msg.b { align-self: flex-start; background: var(--card); border-left: 3px solid var(--accent); }
+        .card { background: var(--card); padding: 25px 10px; border-radius: 15px; text-align: center; border: 1px solid #333; }
 
         /* Footer */
         .footer { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; }
-        .tab { color: #888; text-align: center; font-size: 11px; cursor: pointer; flex:1; }
+        .tab { color: #888; text-align: center; font-size: 11px; flex:1; }
         .tab.active { color: var(--accent); }
     </style>
 </head>
@@ -50,75 +42,52 @@
 
     <div id="login-screen" style="text-align:center; padding: 100px 20px;">
         <h1 style="color:var(--accent);">SAVAGE NETWORK</h1>
-        <p style="color:#666; font-size:12px;">Join the Elite Leadership</p><br>
-        <input type="text" id="uname" placeholder="Your Official Name" style="width:85%; padding:15px; background:var(--card); border:1px solid #333; color:white; border-radius:12px;"><br><br>
-        <button onclick="login()" style="width:85%; padding:15px; background:var(--accent); border:none; border-radius:30px; font-weight:bold;">CREATE PROFILE</button>
+        <p style="color:#888;">Create your public profile</p><br>
+        <input type="text" id="uname" placeholder="Full Name" style="width:85%; padding:15px; background:var(--card); border:1px solid #333; color:white; border-radius:12px;"><br><br>
+        <button onclick="registerUser()" style="width:85%; padding:15px; background:var(--accent); border:none; border-radius:30px; font-weight:bold;">JOIN PUBLIC FEED</button>
     </div>
 
     <div id="app" class="hidden">
-        <div class="sale-banner">🔥 $1 = 1,000 COINS | PUBLIC PROFILES ACTIVE</div>
         <div class="header">
-            <b id="tab-name">SAVAGE FEED</b>
+            <b>SAVAGE PRO</b>
             <div class="coins-badge" onclick="nav('service')">🪙 <span id="c-ui">1000</span></div>
         </div>
 
         <div id="t-home">
-            <div class="section-title">Public Profiles</div>
-            <div class="profiles-row" id="profiles-list">
-                <div class="p-card"><img src="https://i.pravatar.cc/150?u=1"><span>Zoya</span></div>
-                <div class="p-card"><img src="https://i.pravatar.cc/150?u=2"><span>Sara</span></div>
-                <div class="p-card"><img src="https://i.pravatar.cc/150?u=3"><span>Aliza</span></div>
-            </div>
+            <div class="section-title">New People (Public Profiles)</div>
+            <div class="profiles-tray" id="public-list">
+                </div>
 
-            <div class="section-title">Public Posts</div>
-            <div id="post-container">
-                <div class="post">
-                    <div class="post-header">
-                        <img src="https://i.pravatar.cc/150?u=1">
-                        <b>Zoya AI</b>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600" class="post-img">
-                    <div class="post-acts">
-                        <button class="act-btn" onclick="this.style.color='var(--accent)'">👍 Like</button>
-                        <button class="act-btn" onclick="openChat('Zoya AI')">💬 Comment</button>
-                    </div>
+            <div class="section-title">Public Feed</div>
+            <div class="post">
+                <div class="post-header"><img src="https://i.pravatar.cc/150?u=99"><b>Savage Admin</b></div>
+                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600" class="post-img">
+                <div class="post-acts">
+                    <button class="act-btn" onclick="this.style.color='var(--accent)'">👍 Like</button>
+                    <button class="act-btn">💬 Comment</button>
                 </div>
             </div>
         </div>
 
         <div id="t-service" class="hidden">
             <div class="grid">
-                <div class="card" onclick="vcall('Random')">📹<br>Paid V-Call<br><small style="color:var(--gold);">1k / min</small></div>
+                <div class="card" onclick="alert('Calling...')">📹<br>Paid V-Call</div>
                 <div class="card" onclick="window.open('https://wa.me/923255335618','_blank')">💬<br>WhatsApp</div>
-                <div class="card" onclick="topup()">💰<br>Buy Coins<br><small style="color:var(--gold);">$1 = 1k</small></div>
-                <div class="card" onclick="alert('Downloading Savage APK...')">📥<br>Get APK</div>
+                <div class="card" onclick="topup()">💰<br>Buy Coins</div>
+                <div class="card" onclick="alert('Downloading...')">📥<br>Get APK</div>
             </div>
         </div>
 
         <div id="t-inbox" class="hidden">
-            <div style="padding:15px; border-bottom:1px solid #333;" onclick="openChat('Zoya AI')">
-                <b>Zoya AI</b><br><small style="color:#888;">Nomi, recharge for video call!</small>
-            </div>
+            <div class="section-title">Your Friends</div>
+            <div id="friends-list" style="padding:15px; color:#888;">No friends added yet.</div>
         </div>
 
         <div id="t-account" class="hidden" style="text-align:center; padding:30px;">
-            <img id="my-dp" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width:120px; height:120px; border-radius:50%; border:3px solid var(--accent); object-fit:cover;">
-            <h2 id="my-name" style="margin-top:10px;"></h2>
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width:100px; border-radius:50%; border:2px solid var(--accent);">
+            <h2 id="my-name"></h2>
             <p style="color:var(--accent);">Savage Leader 👑</p>
-            <button onclick="logout()" style="margin-top:40px; color:#ff4444; background:none; border:none;">Log Out</button>
-        </div>
-
-        <div id="chat-win" class="win hidden">
-            <div class="header">
-                <button onclick="closeChat()" style="background:none; border:none; color:var(--accent); font-size:20px;">←</button>
-                <b id="c-title">Chat</b>
-                <span style="font-size:10px; color:#00ff44;">● LIVE</span>
-            </div>
-            <div class="msgs" id="m-box"></div>
-            <div style="background:var(--card); padding:10px; display:flex; gap:10px;">
-                <input type="text" id="m-in" placeholder="Type here..." style="flex:1; background:#12181f; border:none; color:white; padding:12px; border-radius:20px;">
-                <button onclick="sendMsg()" style="background:var(--accent); border:none; border-radius:50%; width:45px; height:45px;">➔</button>
-            </div>
+            <button onclick="logout()" style="margin-top:50px; color:#ff4444; background:none; border:none;">Log Out</button>
         </div>
 
         <div class="footer">
@@ -132,6 +101,15 @@
     <script>
         const MY_PHONE = "923255335618";
         let coins = parseInt(localStorage.getItem('s_coins')) || 1000;
+        let friends = JSON.parse(localStorage.getItem('s_friends')) || [];
+
+        // Dummy data for other public users
+        const otherUsers = [
+            {name: "Zoya", img: "https://i.pravatar.cc/150?u=1"},
+            {name: "Sara", img: "https://i.pravatar.cc/150?u=2"},
+            {name: "Aliza", img: "https://i.pravatar.cc/150?u=3"},
+            {name: "Arham", img: "https://i.pravatar.cc/150?u=4"}
+        ];
 
         function init() {
             const u = localStorage.getItem('s_user');
@@ -139,22 +117,48 @@
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('app').classList.remove('hidden');
                 document.getElementById('my-name').innerText = u;
-                // Add current user to public row (Simulation)
-                document.getElementById('profiles-list').innerHTML += `<div class="p-card"><img src="https://i.pravatar.cc/150?u=me"><span>${u}</span></div>`;
+                loadPublicProfiles();
+                loadFriends();
                 updateU();
             }
         }
 
-        function login() {
+        function registerUser() {
             const n = document.getElementById('uname').value;
-            if(!n) return alert("Enter Name!");
+            if(!n) return alert("Enter Name");
             localStorage.setItem('s_user', n);
             location.reload();
         }
 
-        function updateU() {
-            document.getElementById('c-ui').innerText = coins;
-            localStorage.setItem('s_coins', coins);
+        function loadPublicProfiles() {
+            const list = document.getElementById('public-list');
+            list.innerHTML = "";
+            otherUsers.forEach(user => {
+                list.innerHTML += `
+                    <div class="p-card">
+                        <img src="${user.img}">
+                        <span>${user.name}</span>
+                        <button class="add-btn" onclick="addFriend('${user.name}')">Add Friend</button>
+                    </div>`;
+            });
+        }
+
+        function addFriend(name) {
+            if(!friends.includes(name)) {
+                friends.push(name);
+                localStorage.setItem('s_friends', JSON.stringify(friends));
+                alert(name + " added to your friend list!");
+                loadFriends();
+            } else {
+                alert("Already in friends!");
+            }
+        }
+
+        function loadFriends() {
+            const flist = document.getElementById('friends-list');
+            if(friends.length > 0) {
+                flist.innerHTML = friends.map(f => `<div style="padding:10px; border-bottom:1px solid #333; color:white;">👤 ${f}</div>`).join("");
+            }
         }
 
         function nav(t) {
@@ -162,35 +166,11 @@
             document.getElementById('t-'+t).classList.remove('hidden');
             document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
             document.getElementById('b-'+t.substring(0,4)).classList.add('active');
-            document.getElementById('tab-name').innerText = "SAVAGE " + t.toUpperCase();
         }
 
-        function openChat(n) { document.getElementById('chat-win').classList.remove('hidden'); document.getElementById('c-title').innerText = n; }
-        function closeChat() { document.getElementById('chat-win').classList.add('hidden'); }
-
-        function sendMsg() {
-            const i = document.getElementById('m-in');
-            if(!i.value) return;
-            const b = document.getElementById('m-box');
-            b.innerHTML += `<div class="msg u">${i.value}</div>`;
-            i.value = "";
-            setTimeout(() => { b.innerHTML += `<div class="msg b">Check public profiles for more agents! ❤️</div>`; b.scrollTop = b.scrollHeight; }, 1000);
-        }
-
-        function vcall(name) {
-            if(coins < 1000) return alert("1000 coins required!");
-            if(confirm("Call " + name + " for 1 min?")) { coins -= 1000; updateU(); alert("Connecting..."); }
-        }
-
-        function topup() {
-            const usd = prompt("Dollars ($1 = 1k):", "1");
-            if(usd) { 
-                alert("PAY TO " + MY_PHONE + " and send screenshot on WhatsApp.");
-                window.open('https://wa.me/' + MY_PHONE, '_blank');
-            }
-        }
-
+        function updateU() { document.getElementById('c-ui').innerText = coins; localStorage.setItem('s_coins', coins); }
         function logout() { localStorage.clear(); location.reload(); }
+        function topup() { window.open('https://wa.me/' + MY_PHONE, '_blank'); }
     </script>
 </body>
 </html>
