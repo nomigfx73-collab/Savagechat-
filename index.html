@@ -3,198 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SavageChat | Social App</title>
+    <title>SavageChat | Official Fix</title>
     <style>
-        body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 70px; }
+        body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 70px; min-height: 100vh; }
         .hidden { display: none !important; }
-        .nav { background: #1c1f26; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        
-        /* General UI */
-        input, select, textarea { width: 90%; max-width: 300px; padding: 12px; margin: 10px auto; border-radius: 10px; background: #1c1f26; color: white; border: 1px solid #444; display: block; }
-        .btn-action { background: #00d4ff; color: black; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        
-        /* Post Styling */
-        .post-card { background: #1c1f26; border-radius: 15px; margin: 15px; border: 1px solid #333; overflow: hidden; }
-        .post-header { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #333; }
-        .post-dp { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #00d4ff; background-size: cover; margin-right: 10px; }
-        .post-img { width: 100%; height: auto; display: block; }
-        .post-content { padding: 15px; font-size: 14px; color: #eee; }
-
-        /* Profile DP Styling */
-        .profile-dp-setup { text-align: center; padding: 20px; position: relative; }
-        .current-dp { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #00d4ff; background-size: cover; margin-bottom: 10px; background-position: center; }
-        
+        .nav { background: #1c1f26; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; }
+        .stat-card { background: #1c1f26; padding: 20px; border-radius: 15px; margin: 15px; border: 1px solid #333; text-align: center; }
+        input, select, textarea { width: 90%; max-width: 300px; padding: 12px; margin: 10px auto; border-radius: 10px; background: #0b0e14; color: white; border: 1px solid #444; display: block; }
+        .btn-action { background: #00d4ff; color: black; border: none; padding: 12px 25px; border-radius: 20px; font-weight: bold; cursor: pointer; }
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1c1f26; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
+        .post-card { background: #1c1f26; border-radius: 15px; margin: 15px; border: 1px solid #333; padding: 15px; }
     </style>
 </head>
 <body onload="checkLogin()">
 
-    <div id="auth-screen" style="text-align:center; padding-top:60px;">
+    <div id="auth-screen" style="text-align:center; padding-top:100px;">
         <h2 style="color:#00d4ff;">SAVAGE CHAT</h2>
-        <input type="text" id="uname" placeholder="Full Name">
+        <input type="text" id="uname" placeholder="Enter Full Name">
         <select id="urole">
             <option value="gifter">Male (Gifter)</option>
             <option value="earner">Female (Earner)</option>
         </select>
-        <button class="btn-action" onclick="login()">Create Account</button>
+        <button class="btn-action" onclick="login()">Enter App</button>
     </div>
 
     <div id="app-screen" class="hidden">
         <div class="nav">
-            <span id="name-tag" style="font-weight:bold; color:#00d4ff;"></span>
+            <span id="name-tag" style="font-weight:bold; color:#00d4ff;">SAVAGE</span>
             <button onclick="logout()" style="background:none; border:none; color:#ff0055; font-size:12px;">Logout</button>
         </div>
 
-        <div id="feed-view">
-            <div id="create-post-card" class="post-card hidden" style="padding:15px; text-align:center;">
-                <textarea id="new-post-text" placeholder="Write a Savage Status..."></textarea>
-                <input type="file" id="new-post-file" accept="image/*" style="font-size:10px;">
-                <button class="btn-action" onclick="submitPost()">Post Status/Media</button>
+        <div id="home-view">
+            <div class="stat-card">
+                <h3>Welcome Back!</h3>
+                <p id="user-bio" style="color:#aaa;">Savage World is live.</p>
+                <button class="btn-action" onclick="showPage('profile')">Edit Profile</button>
             </div>
             
-            <div id="feed-container"></div>
+            <div id="feed-container">
+                <div class="post-card">
+                    <b>Zoya AI</b>
+                    <p>Hamari chat hamesha free rahegi! ❤️</p>
+                </div>
+            </div>
         </div>
 
-        <div id="profile-view" class="hidden">
-            <div class="profile-dp-setup">
-                <div id="my-current-dp" class="current-dp" style="background-image:url('https://via.placeholder.com/100/00d4ff/000000?text=Savage')"></div>
-                <input type="file" id="dp-file" accept="image/*" onchange="uploadDP()" style="font-size:10px; margin-top:10px;">
-                <p style="font-size:12px; color:#aaa;">Click to upload Profile Picture</p>
-            </div>
-            <div style="text-align:center;">
-                <input type="text" id="edit-bio" placeholder="Profile Bio">
-                <button class="btn-action" onclick="saveProfile()">Save Details</button>
-            </div>
+        <div id="profile-view" class="hidden" style="text-align:center; padding:20px;">
+            <h3>Profile Settings</h3>
+            <textarea id="edit-bio" placeholder="Update your Bio..."></textarea>
+            <button class="btn-action" onclick="saveProfile()">Save Changes</button>
         </div>
 
         <div class="bottom-nav">
-            <div onclick="showPage('feed')">🏠 Feed</div>
+            <div onclick="showPage('home')">🏠 Home</div>
             <div onclick="showPage('profile')">👤 Profile</div>
         </div>
     </div>
 
     <script>
-        let userData = {};
-        let myPosts = [];
-
         function checkLogin() {
-            const savedUser = localStorage.getItem('savageUser');
-            if (savedUser) {
-                userData = JSON.parse(savedUser);
-                loadApp();
-            }
+            const user = localStorage.getItem('savageUser');
+            if (user) { loadApp(JSON.parse(user)); }
         }
 
         function login() {
             let name = document.getElementById('uname').value;
             let role = document.getElementById('urole').value;
-            if(!name) return;
-            userData = { 
-                name: name, 
-                role: role, 
-                bio: "New Savage User", 
-                dp: "https://via.placeholder.com/100/00d4ff/000000?text=Savage" 
-            };
-            localStorage.setItem('savageUser', JSON.stringify(userData));
-            loadApp();
+            if(!name) return alert("Enter Name!");
+            let data = { name: name, role: role, bio: "Available" };
+            localStorage.setItem('savageUser', JSON.stringify(data));
+            loadApp(data);
         }
 
-        function loadApp() {
+        function loadApp(data) {
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-screen').classList.remove('hidden');
-            document.getElementById('name-tag').innerText = userData.name.toUpperCase();
-            
-            // Set current DP and Bio in settings
-            document.getElementById('my-current-dp').style.background_image = `url('${userData.dp}')`;
-            document.getElementById('edit-bio').value = userData.bio;
-
-            // Show post creation only for Females (Earners)
-            if(userData.role === 'earner') {
-                document.getElementById('create-post-card').classList.remove('hidden');
-            }
-            loadPosts();
-        }
-
-        // --- DP UPLOAD SYSTEM ---
-        function uploadDP() {
-            const file = document.getElementById('dp-file').files[0];
-            const reader = new FileReader();
-            reader.onloadend = function() {
-                userData.dp = reader.result; // Base64 image
-                document.getElementById('my-current-dp').style.background_image = `url('${userData.dp}')`;
-                localStorage.setItem('savageUser', JSON.stringify(userData));
-                alert("Profile Picture Updated!");
-            }
-            if (file) { reader.readAsDataURL(file); }
-        }
-
-        // --- POSTING SYSTEM ---
-        function submitPost() {
-            let text = document.getElementById('new-post-text').value;
-            let file = document.getElementById('new-post-file').files[0];
-            if(!text && !file) return;
-
-            let reader = new FileReader();
-            reader.onloadend = function() {
-                const newPost = {
-                    id: Date.now(),
-                    name: userData.name,
-                    dp: userData.dp,
-                    text: text,
-                    media: file ? reader.result : null // Base64 media
-                };
-                myPosts.unshift(newPost); // Add to top
-                saveAndRenderPosts();
-                document.getElementById('new-post-text').value = '';
-                document.getElementById('new-post-file').value = '';
-            }
-            if(file) { reader.readAsDataURL(file); }
-            else { reader.onloadend(); } // Submit text only
-        }
-
-        function loadPosts() {
-            const savedPosts = localStorage.getItem('savagePosts');
-            myPosts = savedPosts ? JSON.parse(savedPosts) : [];
-            renderPosts();
-        }
-
-        function saveAndRenderPosts() {
-            localStorage.setItem('savagePosts', JSON.stringify(myPosts));
-            renderPosts();
-        }
-
-        function renderPosts() {
-            const container = document.getElementById('feed-container');
-            container.innerHTML = '';
-            myPosts.forEach(post => {
-                let card = document.createElement('div');
-                card.className = "post-card";
-                card.innerHTML = `
-                    <div class="post-header">
-                        <div class="post-dp" style="background-image:url('${post.dp}')"></div>
-                        <b>${post.name.toUpperCase()}</b>
-                    </div>
-                    ${post.media ? `<img src="${post.media}" class="post-img">` : ''}
-                    <div class="post-content">${post.text}</div>
-                `;
-                container.appendChild(card);
-            });
+            document.getElementById('name-tag').innerText = data.name.toUpperCase();
+            document.getElementById('user-bio').innerText = data.bio;
         }
 
         function showPage(p) {
-            document.getElementById('feed-view').classList.add('hidden');
+            document.getElementById('home-view').classList.add('hidden');
             document.getElementById('profile-view').classList.add('hidden');
             document.getElementById(p + '-view').classList.remove('hidden');
         }
 
         function saveProfile() {
-            userData.bio = document.getElementById('edit-bio').value;
-            localStorage.setItem('savageUser', JSON.stringify(userData));
-            alert("Profile Bio Saved!");
-            loadApp();
+            let bio = document.getElementById('edit-bio').value;
+            let data = JSON.parse(localStorage.getItem('savageUser'));
+            data.bio = bio;
+            localStorage.setItem('savageUser', JSON.stringify(data));
+            alert("Saved!");
+            showPage('home');
+            loadApp(data);
         }
 
-        function logout() { localStorage.clear(); location.reload(); }
+        function logout() {
+            localStorage.clear();
+            location.reload();
+        }
     </script>
 </body>
-</html>
+    </html>
+    
