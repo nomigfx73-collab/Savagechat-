@@ -3,77 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SavageChat | Secure Login</title>
+    <title>SavageChat | Official</title>
     <style>
-        body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .auth-container { background: #1c1f26; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; box-shadow: 0 0 20px rgba(0,212,255,0.2); text-align: center; border: 1px solid #333; }
-        .logo { font-size: 24px; font-weight: bold; color: #00d4ff; margin-bottom: 20px; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #444; background: #0b0e14; color: white; box-sizing: border-box; }
-        .btn-google { background: white; color: #555; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
-        .btn-main { background: linear-gradient(90deg, #00d4ff, #0055ff); color: white; border: none; padding: 14px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; }
-        .restriction-text { font-size: 11px; color: #ff0055; margin-top: 15px; }
-        #app-interface { display: none; width: 100%; height: 100vh; }
+        body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; }
+        .hidden { display: none !important; }
+        
+        /* Login UI */
+        .auth-box { padding: 40px 20px; text-align: center; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+        input, select { width: 90%; max-width: 300px; padding: 12px; margin: 10px auto; border-radius: 10px; border: 1px solid #333; background: #1c1f26; color: white; }
+        .btn-main { background: #00d4ff; color: black; border: none; padding: 15px 40px; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+
+        /* Dashboard UI */
+        .nav { background: #1c1f26; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; }
+        .card { background: #1c1f26; border-radius: 15px; margin: 15px; overflow: hidden; border: 1px solid #333; position: relative; }
+        img { width: 100%; height: 250px; object-fit: cover; }
+        .info { padding: 15px; }
+        .call-btn { background: #ff0055; color: white; border: none; width: 100%; padding: 12px; font-weight: bold; }
+        
+        /* Earnings View (For Girls) */
+        .earnings-card { background: linear-gradient(45deg, #1c1f26, #2d3436); padding: 20px; border-radius: 15px; margin: 20px; border-left: 5px solid #00ff44; }
+        
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1c1f26; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
     </style>
 </head>
 <body>
 
-    <div id="auth-screen" class="auth-container">
-        <div class="logo">SAVAGE CHAT AI</div>
-        <p style="font-size: 14px; color: #aaa;">Join the world's first unrestricted AI community.</p>
-        
-        <button class="btn-google" onclick="googleLogin()">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="18"> Continue with Google
-        </button>
-
-        <div style="margin: 15px 0; color: #555;">OR</div>
-
-        <input type="text" id="user-name" placeholder="Full Name">
-        <input type="number" id="user-age" placeholder="Age (Must be 18+)">
-        
-        <select id="user-role">
-            <option value="" disabled selected>Select Account Type</option>
-            <option value="gifter">I want to Chat & Gift (Male)</option>
-            <option value="earner">I want to Earn & Talk (Female)</option>
+    <div id="auth-screen" class="auth-box">
+        <h2 style="color: #00d4ff;">SAVAGE CHAT AI</h2>
+        <p style="font-size: 12px; color: #888;">Complete your profile to enter</p>
+        <input type="text" id="name" placeholder="Full Name">
+        <input type="number" id="age" placeholder="Age (18+)">
+        <select id="role">
+            <option value="gifter">I am a Boy (Gifter)</option>
+            <option value="earner">I am a Girl (Earner)</option>
         </select>
-
-        <button class="btn-main" onclick="validateAndEntry()">Create Account</button>
-
-        <p class="restriction-text">⚠️ 18+ ONLY: By joining, you confirm you are of legal age. Fake profiles will be banned.</p>
+        <button class="btn-main" onclick="startApp()">Enter Savage World</button>
+        <p style="font-size: 10px; color: #ff0055; margin-top: 20px;">⚠️ Restricted to 18+ users only.</p>
     </div>
 
-    <div id="app-interface">
-        <h1 style="text-align:center; margin-top:50px;">Welcome to Savage Chat!</h1>
-        <p id="welcome-msg" style="text-align:center;"></p>
+    <div id="app-screen" class="hidden">
+        <div class="nav">
+            <span id="display-name" style="font-weight: bold; color: #00d4ff;"></span>
+            <div id="coin-balance" style="background: #ffaa00; color: black; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">🪙 0</div>
+        </div>
+
+        <div id="gifter-view" class="hidden">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500">
+                <div class="info">
+                    <h3>Zoya (AI Friend)</h3>
+                    <p style="color: #00ff44; font-size: 12px;">● Online & Ready to Chat</p>
+                </div>
+                <button class="call-btn" onclick="alert('Please recharge coins to call!')">START VIDEO CALL</button>
+            </div>
+            <center><button class="btn-main" style="background:#ffaa00;">+ RECHARGE COINS</button></center>
+        </div>
+
+        <div id="earner-view" class="hidden">
+            <div class="earnings-card">
+                <h4 style="margin:0;">My Earnings</h4>
+                <p style="font-size: 24px; font-weight: bold; color: #00ff44; margin: 10px 0;">Rs. 0.00</p>
+                <small style="color: #aaa;">Total Coins Collected: 0</small><br>
+                <button style="margin-top:10px; background:#00ff44; border:none; padding:5px 10px; border-radius:5px; font-weight:bold;">Withdraw to JazzCash</button>
+            </div>
+            <p style="padding: 20px; font-size: 14px; color: #888;">Stay online to receive calls from users. Your earnings will update automatically.</p>
+        </div>
+
+        <div class="bottom-nav">
+            <div onclick="location.reload()">🏠 Home</div>
+            <div onclick="alert('No new messages')">💬 Inbox</div>
+            <div onclick="alert('Profile Settings')">👤 Profile</div>
+        </div>
     </div>
 
     <script>
-        function googleLogin() {
-            alert("Google Login Service is connecting... Please fill details manually for instant access.");
-        }
+        function startApp() {
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+            const role = document.getElementById('role').value;
 
-        function validateAndEntry() {
-            let name = document.getElementById('user-name').value;
-            let age = document.getElementById('user-age').value;
-            let role = document.getElementById('user-role').value;
-
-            if(name == "" || age == "" || role == "") {
+            if(name === "" || age === "") {
                 alert("Please fill all details!");
                 return;
             }
-
             if(age < 18) {
-                alert("Access Denied! This app is only for 18+ users.");
+                alert("Only 18+ allowed!");
                 return;
             }
 
-            // Success
-            alert("Welcome " + name + "! Account created as " + role.toUpperCase());
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('app-interface').style.display = 'block';
-            document.getElementById('welcome-msg').innerText = "Logged in as: " + name + " (" + role + ")";
+            // Hide Login, Show App
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app-screen').classList.remove('hidden');
             
-            // Yahan hum dashboard load karwa sakte hain
+            document.getElementById('display-name').innerText = name.toUpperCase();
+
+            // Show role-specific dashboard
+            if(role === 'gifter') {
+                document.getElementById('gifter-view').classList.remove('hidden');
+            } else {
+                document.getElementById('earner-view').classList.remove('hidden');
+                document.getElementById('coin-balance').innerText = "Balance: Rs 0";
+                document.getElementById('coin-balance').style.background = "#00ff44";
+            }
         }
     </script>
 </body>
-</html>
+    </html>
+    
