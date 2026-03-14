@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SavageChat | Official</title>
+    <style>
+        body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; text-align: center; }
+        .nav { background: #1c1f26; padding: 15px; border-bottom: 2px solid #ff0055; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; }
+        .coins { background: #ffaa00; color: black; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 14px; }
+        .hero { padding: 20px; }
+        .card { background: #1c1f26; border-radius: 20px; margin: 15px auto; max-width: 350px; overflow: hidden; border: 1px solid #333; position: relative; }
+        .status { position: absolute; top: 10px; left: 10px; background: #00ff44; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; }
+        img { width: 100%; height: 300px; object-fit: cover; }
+        .info { padding: 15px; text-align: left; }
+        .price { color: #ff0055; font-weight: bold; }
+        button { background: #ff0055; color: white; border: none; width: 100%; padding: 15px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #ff3377; }
+        #camera-area { width: 100%; background: black; display: none; }
+        
+        /* Payment Modal Styling */
+        #payment-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1c1f26; padding: 20px; border-radius: 15px; border: 2px solid #ffaa00; width: 80%; max-width: 300px; z-index: 100; }
+        .close-btn { color: #ff0055; float: right; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="nav">
+        <span style="font-weight: bold; color: #ff0055; font-size: 20px;">SAVAGE CHAT</span>
+        <div class="coins">🪙 0 Coins</div>
+    </div>
+
+    <div class="hero">
+        <div class="card">
+            <div class="status"></div>
+            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500" alt="Model">
+            <div class="info">
+                <h2 style="margin: 0;">Zoya Khan 🔥</h2>
+                <p class="price">💎 100 Coins / min</p>
+                <p style="font-size: 12px; color: #aaa;">Expert in Friendly Chat & Fun</p>
+            </div>
+            <video id="camera-area" autoplay playsinline></video>
+            <button onclick="startCall()">START VIDEO CALL</button>
+        </div>
+        
+        <button style="background: #ffaa00; margin-top: 20px; color: black; width: 80%; border-radius: 10px;" onclick="showPayment()">➕ RECHARGE COINS</button>
+    </div>
+
+    <div id="payment-modal">
+        <span class="close-btn" onclick="hidePayment()">X</span>
+        <h3>💰 Recharge Wallet</h3>
+        <p style="font-size: 14px;">Send payment to get coins:</p>
+        <div style="background: #333; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+            <p style="margin: 5px 0;"><b>JazzCash / EasyPaisa</b></p>
+            <p style="color: #ffaa00; font-size: 18px; margin: 5px 0;">03xx-xxxxxxx</p>
+            <p style="font-size: 12px;">(Apna number yahan likhein)</p>
+        </div>
+        <p style="font-size: 12px; color: #aaa;">Send Screenshot on WhatsApp after payment.</p>
+        <button style="background: #25d366; font-size: 14px; padding: 10px;" onclick="window.open('https://wa.me/yournumber')">Contact on WhatsApp</button>
+    </div>
+
+    <script>
+        async function startCall() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                const video = document.getElementById('camera-area');
+                video.srcObject = stream;
+                video.style.display = 'block';
+                document.querySelector('img').style.display = 'none';
+                alert("Connecting to Savage Secure Server...");
+            } catch (err) {
+                alert("Please allow Camera access to start the call!");
+            }
+        }
+
+        function showPayment() {
+            document.getElementById('payment-modal').style.display = 'block';
+        }
+
+        function hidePayment() {
+            document.getElementById('payment-modal').style.display = 'none';
+        }
+    </script>
+</body>
+  </html>
+  
