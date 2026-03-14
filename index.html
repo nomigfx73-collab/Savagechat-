@@ -3,180 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Savage App Pro</title>
+    <title>Savage App | Commercial v33</title>
     <style>
-        :root { --accent: #00d4ff; --dark: #0b1014; --card: #1c2229; --green: #25d366; }
-        body { background: var(--dark); color: white; font-family: sans-serif; margin: 0; padding-bottom: 70px; overflow-x: hidden; }
+        :root { --accent: #00d4ff; --dark: #0b1014; --card: #1c2229; --gold: #ffaa00; }
+        body { background: var(--dark); color: white; font-family: sans-serif; margin: 0; padding-bottom: 75px; }
         .hidden { display: none !important; }
         
-        /* Header & Coins */
+        /* Headers */
         .header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--accent); position: sticky; top: 0; z-index: 1000; }
-        .coin-box { background: rgba(255,170,0,0.1); color: #ffaa00; padding: 5px 12px; border-radius: 20px; border: 1px solid #ffaa00; font-weight: bold; font-size: 14px; }
+        .coins-badge { background: rgba(255,170,0,0.1); color: var(--gold); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--gold); font-weight: bold; }
 
-        /* Home: Live Streams & FB Posts */
-        .live-tray { display: flex; overflow-x: auto; padding: 10px; gap: 10px; background: #0e141a; border-bottom: 1px solid #222; }
-        .live-user { min-width: 60px; height: 60px; border-radius: 50%; border: 2px solid #ff0055; padding: 2px; position: relative; }
-        .live-user img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .live-label { position: absolute; bottom: -5px; left: 20%; background: #ff0055; font-size: 8px; padding: 2px 5px; border-radius: 4px; font-weight: bold; }
+        /* Sale Banner */
+        .sale-banner { background: linear-gradient(90deg, #ff0055, #ffaa00); color: white; padding: 10px; text-align: center; font-size: 12px; font-weight: bold; letter-spacing: 1px; }
 
-        .post { background: var(--card); margin: 10px; border-radius: 12px; border: 1px solid #333; overflow: hidden; }
+        /* Home UI */
+        .live-scroll { display: flex; overflow-x: auto; padding: 10px; gap: 10px; background: #0e141a; }
+        .live-u { min-width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ff0055; padding: 2px; position: relative; }
+        .live-u img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .tag { position: absolute; bottom: -5px; left: 15%; background: #ff0055; font-size: 8px; padding: 2px 6px; border-radius: 10px; }
+
+        .post { background: var(--card); border-radius: 15px; margin: 15px; border: 1px solid #333; overflow: hidden; }
         .post-img { width: 100%; height: auto; display: block; }
-        .post-btns { padding: 12px; display: flex; gap: 15px; border-top: 1px solid #2a323d; }
-        .btn-act { background: none; border: none; color: #888; font-size: 14px; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .post-acts { padding: 12px; display: flex; gap: 20px; border-top: 1px solid #2a323d; }
+        .act-btn { background: none; border: none; color: #888; font-size: 14px; cursor: pointer; }
 
         /* Service Grid */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
-        .card { background: var(--card); padding: 25px 10px; border-radius: 12px; text-align: center; border: 1px solid #333; cursor: pointer; }
-        .card:active { background: #2a323d; }
+        .card { background: var(--card); padding: 25px 10px; border-radius: 15px; text-align: center; border: 1px solid #333; }
 
-        /* Real Chat System */
+        /* Chat Window */
         .win { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 2000; display: flex; flex-direction: column; }
         .msgs { flex: 1; padding: 15px; overflow-y: auto; background: #0b1014; display: flex; flex-direction: column; }
         .msg { max-width: 75%; padding: 10px; border-radius: 12px; margin-bottom: 10px; font-size: 14px; }
         .msg.u { align-self: flex-end; background: var(--accent); color: black; font-weight: bold; }
-        .msg.b { align-self: flex-start; background: var(--card); color: white; border-left: 3px solid var(--accent); }
+        .msg.b { align-self: flex-start; background: var(--card); border-left: 3px solid var(--accent); }
 
         /* Footer */
         .footer { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; }
-        .tab { color: #888; text-align: center; font-size: 11px; flex: 1; cursor: pointer; }
+        .tab { color: #888; text-align: center; font-size: 11px; cursor: pointer; flex:1; }
         .tab.active { color: var(--accent); }
     </style>
 </head>
-<body onload="checkLogin()">
+<body onload="init()">
 
-    <div id="login-pg" style="text-align:center; padding-top:100px;">
-        <h1 style="color:var(--accent);">SAVAGE CHAT</h1>
-        <input type="text" id="name-in" placeholder="Username" style="padding:15px; width:80%; border-radius:10px; background:var(--card); border:1px solid #333; color:white;"><br><br>
-        <button onclick="doLogin()" style="padding:15px 60px; border-radius:30px; background:var(--accent); border:none; font-weight:bold;">LOGIN</button>
+    <div id="login-screen" style="text-align:center; padding: 100px 20px;">
+        <h1 style="color:var(--accent);">SAVAGE LOG-IN</h1>
+        <input type="text" id="uname" placeholder="Your Name" style="width:85%; padding:15px; background:var(--card); border:1px solid #333; color:white; border-radius:12px;"><br><br>
+        <button onclick="login()" style="width:85%; padding:15px; background:var(--accent); border:none; border-radius:30px; font-weight:bold;">ENTER APP</button>
     </div>
 
     <div id="app" class="hidden">
+        <div class="sale-banner">🔥 SALE: $1 = 1,000 COINS | V-CALL: 1,000 COINS / MIN</div>
         <div class="header">
-            <b id="page-title">SAVAGE APP</b>
-            <div class="coin-box">🪙 <span id="c-count">500</span></div>
+            <b id="tab-name">HOME</b>
+            <div class="coins-badge" onclick="nav('service')">🪙 <span id="c-ui">1000</span></div>
         </div>
 
-        <div id="p-home">
-            <div class="live-tray">
-                <div class="live-user" onclick="alert('Starting Video Call...')"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100"><span class="live-label">LIVE</span></div>
-                <div class="live-user"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100"><span class="live-label">LIVE</span></div>
+        <div id="t-home">
+            <div class="live-scroll">
+                <div class="live-u" onclick="vcall('Zoya AI')"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100"><span class="tag">LIVE</span></div>
+                <div class="live-u" onclick="vcall('Sara')"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100"><span class="tag">LIVE</span></div>
             </div>
             <div class="post">
-                <div style="padding:10px;"><b>Zoya AI</b> <small style="color:var(--accent);">● Official</small></div>
+                <div style="padding:10px;"><b>Zoya AI</b> <small style="color:var(--accent); margin-left:5px;">● Official</small></div>
                 <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600" class="post-img">
-                <div class="post-btns">
-                    <button class="btn-act" onclick="this.style.color='#00d4ff'">👍 Like</button>
-                    <button class="btn-act" onclick="openChat('Zoya AI')">💬 Comment</button>
+                <div class="post-acts">
+                    <button class="act-btn" onclick="this.style.color='var(--accent)'">👍 Like</button>
+                    <button class="act-btn" onclick="openChat('Zoya AI')">💬 Comment</button>
                 </div>
             </div>
         </div>
 
-        <div id="p-service" class="hidden">
+        <div id="t-service" class="hidden">
             <div class="grid">
-                <div class="card" onclick="startVcall()">📹<br>Paid V-Call</div>
-                <div class="card" onclick="window.open('https://wa.me/yournumber','_blank')">💬<br>WhatsApp</div>
-                <div class="card" onclick="showTopup()">💰<br>Topup</div>
-                <div class="card" onclick="downloadAPK()">📥<br>Get APK</div>
+                <div class="card" onclick="vcall('Random Girl')">📹<br>Paid V-Call<br><small style="color:var(--gold);">$1 / min</small></div>
+                <div class="card" onclick="window.open('https://wa.me/923000000000','_blank')">💬<br>WhatsApp</div>
+                <div class="card" onclick="topup()">💰<br>Buy Coins<br><small style="color:var(--gold);">$1 = 1k</small></div>
+                <div class="card" onclick="alert('Downloading APK...')">📥<br>Get APK</div>
             </div>
         </div>
 
-        <div id="p-inbox" class="hidden">
+        <div id="t-inbox" class="hidden">
             <div style="padding:15px; border-bottom:1px solid #333;" onclick="openChat('Zoya AI')">
-                <b>Zoya AI (Human Reply)</b><br><small style="color:#888;">Nomi, where are you?</small>
+                <b>Zoya AI (Agent)</b><br><small style="color:#888;">Hi Nomi! Want to video call? ❤️</small>
             </div>
         </div>
 
-        <div id="p-account" class="hidden" style="text-align:center; padding:30px;">
-            <img id="u-dp" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--accent); object-fit:cover;">
-            <h2 id="u-name"></h2>
+        <div id="t-account" class="hidden" style="text-align:center; padding:30px;">
+            <div style="position:relative; width:100px; margin:0 auto;">
+                <img id="my-dp" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width:100px; height:100px; border-radius:50%; border:2px solid var(--accent); object-fit:cover;">
+                <label style="position:absolute; bottom:0; right:0; background:var(--accent); padding:5px; border-radius:50%; cursor:pointer;">
+                    📷<input type="file" class="hidden" onchange="upload(this)">
+                </label>
+            </div>
+            <h2 id="my-name"></h2>
             <p style="color:var(--accent);">Savage Leader 👑</p>
-            <button onclick="logout()" style="color:#ff4444; background:none; border:none; margin-top:50px;">Logout & Clear Info</button>
+            <button onclick="logout()" style="margin-top:40px; color:#ff4444; background:none; border:none;">Log Out</button>
         </div>
 
         <div id="chat-win" class="win hidden">
             <div class="header">
                 <button onclick="closeChat()" style="background:none; border:none; color:var(--accent); font-size:20px;">←</button>
                 <b id="c-title">Chat</b>
-                <span style="font-size:10px; color:#00ff44;">● ONLINE</span>
+                <span style="font-size:10px; color:#00ff44;">● AGENT ONLINE</span>
             </div>
             <div class="msgs" id="m-box"></div>
             <div style="background:var(--card); padding:10px; display:flex; gap:10px;">
-                <input type="text" id="m-in" placeholder="Message..." style="flex:1; background:#12181f; border:none; color:white; padding:12px; border-radius:20px;">
-                <button onclick="send()" style="background:var(--accent); border:none; border-radius:50%; width:45px; height:45px;">➔</button>
+                <input type="text" id="m-in" placeholder="Free Chat..." style="flex:1; background:#12181f; border:none; color:white; padding:12px; border-radius:20px;">
+                <button onclick="sendMsg()" style="background:var(--accent); border:none; border-radius:50%; width:40px; height:40px;">➔</button>
             </div>
         </div>
 
         <div class="footer">
-            <div class="tab active" id="t-home" onclick="nav('home')">🏠<br>Home</div>
-            <div class="tab" id="t-serv" onclick="nav('service')">🛠️<br>Service</div>
-            <div class="tab" id="t-inbx" onclick="nav('inbox')">💬<br>Inbox</div>
-            <div class="tab" id="t-acnt" onclick="nav('account')">👤<br>Account</div>
+            <div class="tab active" id="b-home" onclick="nav('home')">🏠<br>Home</div>
+            <div class="tab" id="b-serv" onclick="nav('service')">🛠️<br>Service</div>
+            <div class="tab" id="b-inbo" onclick="nav('inbox')">💬<br>Inbox</div>
+            <div class="tab" id="b-acco" onclick="nav('account')">👤<br>Account</div>
         </div>
     </div>
 
     <script>
-        let coins = parseInt(localStorage.getItem('s_coins')) || 500;
+        let coins = parseInt(localStorage.getItem('s_coins')) || 1000;
 
-        function checkLogin() {
+        function init() {
             const u = localStorage.getItem('s_user');
             if(u) {
-                document.getElementById('login-pg').classList.add('hidden');
+                document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('app').classList.remove('hidden');
-                document.getElementById('u-name').innerText = u;
-                updateC();
+                document.getElementById('my-name').innerText = u;
+                const dp = localStorage.getItem('s_dp');
+                if(dp) document.getElementById('my-dp').src = dp;
+                updateU();
             }
         }
 
-        function doLogin() {
-            const n = document.getElementById('name-in').value;
+        function login() {
+            const n = document.getElementById('uname').value;
             if(!n) return alert("Enter Name");
             localStorage.setItem('s_user', n);
             location.reload();
         }
 
-        function updateC() {
-            document.getElementById('c-count').innerText = coins;
+        function updateU() {
+            document.getElementById('c-ui').innerText = coins;
             localStorage.setItem('s_coins', coins);
         }
 
         function nav(t) {
-            ['home','service','inbox','account'].forEach(id => document.getElementById('p-'+id).classList.add('hidden'));
-            document.getElementById('p-'+t).classList.remove('hidden');
+            ['home','service','inbox','account'].forEach(id => document.getElementById('t-'+id).classList.add('hidden'));
+            document.getElementById('t-'+t).classList.remove('hidden');
             document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
-            document.getElementById('t-'+t.substring(0,4)).classList.add('active');
-            document.getElementById('page-title').innerText = t.toUpperCase();
+            document.getElementById('b-'+t.substring(0,4)).classList.add('active');
+            document.getElementById('tab-name').innerText = t.toUpperCase();
         }
 
         function openChat(n) {
             document.getElementById('chat-win').classList.remove('hidden');
             document.getElementById('c-title').innerText = n;
-            const b = document.getElementById('m-box');
-            if(b.innerHTML === "") b.innerHTML = `<div class="msg b">Hi Savage! How are you? ❤️</div>`;
         }
         function closeChat() { document.getElementById('chat-win').classList.add('hidden'); }
 
-        function send() {
+        function sendMsg() {
             const i = document.getElementById('m-in');
             if(!i.value) return;
-            if(coins < 10) return alert("No Coins!");
             const b = document.getElementById('m-box');
             b.innerHTML += `<div class="msg u">${i.value}</div>`;
-            coins -= 10; updateC(); i.value = "";
-            b.scrollTop = b.scrollHeight;
-            setTimeout(() => { 
-                b.innerHTML += `<div class="msg b">That's savage! Recharge to continue. 😉</div>`; 
-                b.scrollTop = b.scrollHeight;
-            }, 1000);
+            i.value = "";
+            setTimeout(() => { b.innerHTML += `<div class="msg b">Hey Savage! Recharge 1000 coins to call me right now. ❤️</div>`; b.scrollTop = b.scrollHeight; }, 1000);
         }
 
-        function startVcall() {
-            if(coins < 200) return alert("Need 200 coins for V-Call!");
-            coins -= 200; updateC();
-            alert("Connecting to Random Private Video Call...");
+        function vcall(name) {
+            if(coins < 1000) return alert("You need 1,000 coins ($1) for 1 minute Video Call!");
+            const confirmCall = confirm("Call " + name + "? (Rate: 1,000 Coins / Minute)");
+            if(confirmCall) {
+                coins -= 1000;
+                updateU();
+                alert("Connecting to Private Video Call with " + name + "...");
+            }
         }
 
-        function showTopup() { alert("Easypaisa/JazzCash Gateway: 0300XXXXXXX"); }
-        function downloadAPK() { window.open('https://example.com/savage.apk','_blank'); }
+        function topup() {
+            const amount = prompt("Enter USD Amount to Recharge (e.g. 1, 5, 10)");
+            if(amount && !isNaN(amount)) {
+                alert("Processing $" + amount + " Topup... Please send payment to EasyPaisa/JazzCash.");
+                // For testing: coins += (amount * 1000); updateU();
+            }
+        }
+
+        function upload(input) {
+            if (input.files && input.files[0]) {
+                const r = new FileReader();
+                r.onload = e => { document.getElementById('my-dp').src = e.target.result; localStorage.setItem('s_dp', e.target.result); };
+                r.readAsDataURL(input.files[0]);
+            }
+        }
+
         function logout() { localStorage.clear(); location.reload(); }
     </script>
 </body>
