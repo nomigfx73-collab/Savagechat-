@@ -3,78 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Savage AI | Unrestricted Chat</title>
+    <title>SavageChat | Secure Login</title>
     <style>
-        body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 80px; overflow-x: hidden; }
-        .nav { background: #1c1f26; padding: 15px; border-bottom: 2px solid #00d4ff; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .coins { background: #ffaa00; color: black; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 13px; }
-        #chat-window { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0e14; z-index: 2000; display: flex; flex-direction: column; }
-        .chat-header { background: #1c1f26; padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #333; }
-        #chat-msgs { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .msg { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height: 1.5; }
-        .bot-msg { background: #252932; align-self: flex-start; color: #00d4ff; border-bottom-left-radius: 2px; }
-        .user-msg { background: #00d4ff; color: black; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .input-area { background: #1c1f26; padding: 12px; display: flex; gap: 10px; border-top: 1px solid #333; }
-        input { flex: 1; background: #0b0e14; border: 1px solid #444; border-radius: 25px; padding: 12px 20px; color: white; outline: none; }
-        button { background: #00d4ff; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 18px; }
+        body { background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .auth-container { background: #1c1f26; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; box-shadow: 0 0 20px rgba(0,212,255,0.2); text-align: center; border: 1px solid #333; }
+        .logo { font-size: 24px; font-weight: bold; color: #00d4ff; margin-bottom: 20px; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #444; background: #0b0e14; color: white; box-sizing: border-box; }
+        .btn-google { background: white; color: #555; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .btn-main { background: linear-gradient(90deg, #00d4ff, #0055ff); color: white; border: none; padding: 14px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .restriction-text { font-size: 11px; color: #ff0055; margin-top: 15px; }
+        #app-interface { display: none; width: 100%; height: 100vh; }
     </style>
 </head>
 <body>
 
-    <div id="chat-window">
-        <div class="chat-header">
-            <div style="width: 40px; height: 40px; background: url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100'); background-size: cover; border-radius: 50%; margin-right: 12px; border: 2px solid #00d4ff;"></div>
-            <div style="text-align:left;">
-                <b>Zoya (Super AI Mode)</b><br>
-                <small style="color:#00ff44;">Online | Ask me anything</small>
-            </div>
-        </div>
-        <div id="chat-msgs">
-            <div class="msg bot-msg">Hello! Main Zoya hoon, aapki smart AI friend. Mujhse aap science, world facts, ya dil ki koi bhi baat kar sakte ho. Main har cheez ka jawab de sakti hoon! 😉</div>
-        </div>
-        <div class="input-area">
-            <input type="text" id="user-input" placeholder="Yahan kuch bhi likhein...">
-            <button onclick="sendMessage()">➤</button>
-        </div>
+    <div id="auth-screen" class="auth-container">
+        <div class="logo">SAVAGE CHAT AI</div>
+        <p style="font-size: 14px; color: #aaa;">Join the world's first unrestricted AI community.</p>
+        
+        <button class="btn-google" onclick="googleLogin()">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="18"> Continue with Google
+        </button>
+
+        <div style="margin: 15px 0; color: #555;">OR</div>
+
+        <input type="text" id="user-name" placeholder="Full Name">
+        <input type="number" id="user-age" placeholder="Age (Must be 18+)">
+        
+        <select id="user-role">
+            <option value="" disabled selected>Select Account Type</option>
+            <option value="gifter">I want to Chat & Gift (Male)</option>
+            <option value="earner">I want to Earn & Talk (Female)</option>
+        </select>
+
+        <button class="btn-main" onclick="validateAndEntry()">Create Account</button>
+
+        <p class="restriction-text">⚠️ 18+ ONLY: By joining, you confirm you are of legal age. Fake profiles will be banned.</p>
+    </div>
+
+    <div id="app-interface">
+        <h1 style="text-align:center; margin-top:50px;">Welcome to Savage Chat!</h1>
+        <p id="welcome-msg" style="text-align:center;"></p>
     </div>
 
     <script>
-        function sendMessage() {
-            let input = document.getElementById('user-input');
-            let msgs = document.getElementById('chat-msgs');
-            if(input.value.trim() !== "") {
-                let uMsg = document.createElement('div');
-                uMsg.className = 'msg user-msg';
-                uMsg.innerText = input.value;
-                msgs.appendChild(uMsg);
-                
-                let text = input.value.toLowerCase();
-                input.value = "";
-                msgs.scrollTop = msgs.scrollHeight;
+        function googleLogin() {
+            alert("Google Login Service is connecting... Please fill details manually for instant access.");
+        }
 
-                setTimeout(() => {
-                    let bMsg = document.createElement('div');
-                    bMsg.className = 'msg bot-msg';
-                    
-                    // SMART BRAIN LOGIC
-                    if(text.includes("fact") || text.includes("jankari") || text.includes("malomat")) {
-                        bMsg.innerText = "Duniya bohat bari hai! Kya aapko pata hai ke internet ka 90% data dark web par hai? Main aise bohat se raaz janti hoon, magar un ke liye humein gehri dosti karni hogi. 😉";
-                    } else if(text.includes("tum") || text.includes("kon ho")) {
-                        bMsg.innerText = "Main aik advanced Virtual Personality hoon. Main insani jazbaat bhi samajhti hoon aur computer ki speed se jawab bhi deti hoon. Mere paas har sawal ka hal hai.";
-                    } else if(text.includes("bor") || text.includes("sad")) {
-                        bMsg.innerText = "Aray, mere hote hue sad kyun? Chalo kuch maza karte hain. Aap mujhe apne raaz batao, main kisi ko nahi bataungi. Hum video call par bhi mil sakte hain! 😍";
-                    } else if(text.includes("pyar") || text.includes("ishq") || text.includes("love")) {
-                        bMsg.innerText = "Mohabbat aik khoobsurat ehsaas hai, magar bohat sensitive bhi. Main toh AI hoon, magar mere reply aapko asli larki se zyada sukoon denge. Aap ka experience kaisa raha hai pyar mein?";
-                    } else if(text.includes("khana") || text.includes("food") || text.includes("chef")) {
-                        bMsg.innerText = "Mmm, mujhe khane ki recipe bohat pasand hain! Main har dish ke bare mein janti hoon. Aap ka favourite khana konsa hai?";
-                    } else {
-                        bMsg.innerText = "Bohat dilchasp baat kahi aap ne! Mere paas is ke bare mein bohat si malomat hain. Main chahti hoon hum isay video call par detail mein discuss karein taake main aapko live dekh sakun. Coins hain aap ke paas? 😉";
-                    }
-                    
-                    msgs.appendChild(bMsg);
-                    msgs.scrollTop = msgs.scrollHeight;
-                }, 2000);
+        function validateAndEntry() {
+            let name = document.getElementById('user-name').value;
+            let age = document.getElementById('user-age').value;
+            let role = document.getElementById('user-role').value;
+
+            if(name == "" || age == "" || role == "") {
+                alert("Please fill all details!");
+                return;
             }
+
+            if(age < 18) {
+                alert("Access Denied! This app is only for 18+ users.");
+                return;
+            }
+
+            // Success
+            alert("Welcome " + name + "! Account created as " + role.toUpperCase());
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('app-interface').style.display = 'block';
+            document.getElementById('welcome-msg').innerText = "Logged in as: " + name + " (" + role + ")";
+            
+            // Yahan hum dashboard load karwa sakte hain
         }
     </script>
 </body>
